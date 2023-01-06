@@ -78,10 +78,20 @@
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <CudaCompile Include="Collision.cu" />
     <CudaCompile Include="kernel.cu" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Ball.hpp" />
+    <ClInclude Include="BallList.hpp" />
+    <ClInclude Include="Board.hpp" />
+    <ClInclude Include="Camera.hpp" />
+    <ClInclude Include="collision.cuh" />
+    <ClInclude Include="Light.hpp" />
+    <ClInclude Include="Point.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
