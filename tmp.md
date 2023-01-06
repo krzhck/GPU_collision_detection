@@ -20,3 +20,13 @@ https://zhuanlan.zhihu.com/p/34587739
 #### TODO
 
 - Nsight maybe ?
+
+
+
+
+
+### DOING
+
+把 include/GL 移动到了 system32 不 work
+
+https://www.cnblogs.com/Fionaaa/p/15557163.html
