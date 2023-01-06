@@ -11,7 +11,9 @@ https://zhuanlan.zhihu.com/p/34587739
 - addKernel launch failed: no kernel image is available for execution on the device
   - https://blog.csdn.net/weixin_54672021/article/details/119965884
   - SM: 5
-- 
+- OpenGL
+  - https://zhuanlan.zhihu.com/p/402397399
+
 
 
 
