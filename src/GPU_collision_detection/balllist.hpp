@@ -26,8 +26,8 @@ public:
 
 
 	/*
-	ÃèÊö£º³õÊ¼»¯Î»ÖÃĞÅÏ¢
-	²ÎÊı£ºx·¶Î§£¨Êµ¼ÊÊÇ-xµ½x£©£¬y·¶Î§£¨0µ½y£©£¬z·¶Î§£¨-zµ½z£©£¬Ã¿¸öÖáÉÏÇò¸öÊı£¨Êµ¼ÊnumµÄÁ¢·½¸öÇò£©£¬Çò×î´ó°ë¾¶£¬Ä£Ê½
+	æè¿°ï¼šåˆå§‹åŒ–ä½ç½®ä¿¡æ¯
+	å‚æ•°ï¼šxèŒƒå›´ï¼ˆå®é™…æ˜¯-xåˆ°xï¼‰ï¼ŒyèŒƒå›´ï¼ˆ0åˆ°yï¼‰ï¼ŒzèŒƒå›´ï¼ˆ-zåˆ°zï¼‰ï¼Œæ¯ä¸ªè½´ä¸Šçƒä¸ªæ•°ï¼ˆå®é™…numçš„ç«‹æ–¹ä¸ªçƒï¼‰ï¼Œçƒæœ€å¤§åŠå¾„ï¼Œæ¨¡å¼
 	*/
 	void Init(float x, float y, float z, int num, float max_radius, float time_once)
 	{
@@ -48,7 +48,7 @@ public:
 
 	void InitBalls()
 	{
-		//Ğ¡ÇòµÄÎÆÀí£¬²ÄÖÊ£¬ÑÕÉ«
+		//å°çƒçš„çº¹ç†ï¼Œæè´¨ï¼Œé¢œè‰²
 		GLfloat color[3] = { 1.0, 0.0, 0.0 };
 		GLfloat ambient[3] = { 0.4, 0.2, 0.2 };
 		GLfloat diffuse[3] = { 1, 0.8, 0.8 };
@@ -85,9 +85,9 @@ public:
 	}
 
 	/*
-		ÃèÊö£º»æÖÆËùÓĞÇò
-		²ÎÊı£ºÎŞ
-		·µ»Ø£ºÎŞ
+		æè¿°ï¼šç»˜åˆ¶æ‰€æœ‰çƒ
+		å‚æ•°ï¼šæ— 
+		è¿”å›ï¼šæ— 
 	*/
 	void DrawBalls()
 	{
@@ -98,9 +98,9 @@ public:
 	}
 
 	/*
-		ÃèÊö£ºÅĞ¶ÏÁ½¸öÇòÊÇ·ñÏà×²
-		²ÎÊı£ºÇòa£¬Çòb
-		·µ»Ø£ºÊÇ1£¬·ñ0
+		æè¿°ï¼šåˆ¤æ–­ä¸¤ä¸ªçƒæ˜¯å¦ç›¸æ’
+		å‚æ•°ï¼šçƒaï¼Œçƒb
+		è¿”å›ï¼šæ˜¯1ï¼Œå¦0
 	*/
 	bool JudgeCollision(Ball& a, Ball& b)
 	{
@@ -116,23 +116,23 @@ public:
 	}
 
 	/*
-		ÃèÊö£ºÁ½ÇòÏà×²ºó¸üĞÂËÙ¶È
-		²ÎÊı£ºÇòa£¬Çòb
-		·µ»Ø£ºÎŞ
+		æè¿°ï¼šä¸¤çƒç›¸æ’åæ›´æ–°é€Ÿåº¦
+		å‚æ•°ï¼šçƒaï¼Œçƒb
+		è¿”å›ï¼šæ— 
 	*/
 	void ChangeSpeed(Ball& a, Ball& b)
 	{
-		//¾¶ÏòËÙ¶È°´ÕÕÖÊÁ¿×ö±ä»»£¬·¨ÏòËÙ¶È²»±ä
+		//å¾„å‘é€Ÿåº¦æŒ‰ç…§è´¨é‡åšå˜æ¢ï¼Œæ³•å‘é€Ÿåº¦ä¸å˜
 		Point diff = b.CurrentPlace - a.CurrentPlace;
 		float dist = diff.Dist();
 		
-		//Çó¾¶Ïò£¬·¨ÏòËÙ¶È
+		//æ±‚å¾„å‘ï¼Œæ³•å‘é€Ÿåº¦
 		Point speed_collide_a = diff * (a.CurrentSpeed * diff / dist / dist);
 		Point speed_collide_b = diff * (b.CurrentSpeed * diff / dist / dist);
 		Point unchanged_a = a.CurrentSpeed - speed_collide_a;
 		Point unchanged_b = b.CurrentSpeed - speed_collide_b;
 		
-		//¼ÙÉèb²»¶¯£¬a×²b£¬¸üĞÂÁ½Õß¾¶ÏòËÙ¶È
+		//å‡è®¾bä¸åŠ¨ï¼Œaæ’bï¼Œæ›´æ–°ä¸¤è€…å¾„å‘é€Ÿåº¦
 		Point speed_collide_new_a = (speed_collide_a * (a.Weight - b.Weight) + speed_collide_b * (2 * b.Weight)) / (a.Weight + b.Weight);
 		Point speed_collide_new_b = (speed_collide_a * (2 * a.Weight) + speed_collide_b * (b.Weight - a.Weight)) / (a.Weight + b.Weight);
 		Point speed_new_a = speed_collide_new_a + unchanged_a;
@@ -141,7 +141,7 @@ public:
 		b.CurrentSpeed = speed_new_b;
 	}
 
-	//¸üĞÂÇòµÄÔË¶¯--Ö÷º¯Êı
+	//æ›´æ–°çƒçš„è¿åŠ¨--ä¸»å‡½æ•°
 	void UpdateBalls()
 	{
 		static int total_num = 0;
@@ -160,7 +160,7 @@ public:
 		if (total_num == 10000)
 		{
 			float average_time = total_time / total_num;
-			cout << total_num << "´ÎÅö×²¼ì²âÆ½¾ùºÄÊ±" << average_time << "ms" << endl;
+			cout << total_num << "æ¬¡ç¢°æ’æ£€æµ‹å¹³å‡è€—æ—¶" << average_time << "ms" << endl;
 			total_num = 0;
 			total_time = 0;
 		}
