@@ -2,8 +2,8 @@
 #include<math.h>
 #include<GL/glut.h>
 #include<vector>
-#include"Point.hpp"
-#include"Board.hpp"
+#include"point.hpp"
+#include"board.hpp"
 using namespace std;
 
 #pragma once

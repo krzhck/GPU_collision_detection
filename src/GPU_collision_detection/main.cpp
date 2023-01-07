@@ -2,12 +2,12 @@
 #include<iostream>
 #include<math.h>
 #include<windows.h>
-#include "Point.hpp"
-#include "Ball.hpp"
-#include "Light.hpp"
-#include "Camera.hpp"
-#include "Board.hpp"
-#include "BallList.hpp"
+#include "point.hpp"
+#include "ball.hpp"
+#include "light.hpp"
+#include "camera.hpp"
+#include "board.hpp"
+#include "balllist.hpp"
 #include "collision.cuh"
 using namespace std;
 
@@ -16,8 +16,8 @@ using namespace std;
 const int WindowSizeX = 800, WindowSizeY = 600, WindowPlaceX = 100, WindowPlaceY = 100;
 const char WindowName[] = "MyScene";
 const float TimeOnce = 0.02; //刷新时间
-const int BallNum = 4;
-const float XRange = 18, ZRange = 18, Height = 36, MaxRadius = 1; //场景的X,Y,Z范围（-X,X),(0,H),(-Z,Z)
+const int BallNum =4;
+const float XRange = 10, ZRange = 10, Height = 20, MaxRadius = 1; //场景的X,Y,Z范围（-X,X),(0,H),(-Z,Z)
 int GlobalMode = -1;
 
 //光照，相机

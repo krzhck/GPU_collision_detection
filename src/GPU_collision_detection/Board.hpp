@@ -1,6 +1,6 @@
 #pragma once
 #include<math.h>
-#include"Point.hpp"
+#include"point.hpp"
 using namespace std;
 
 class Board

@@ -3,10 +3,10 @@
 #include<GL/glut.h>
 #include<vector>
 #include<time.h>
-#include"Point.hpp"
-#include"Board.hpp"
-#include"Ball.hpp"
-#include"Collision.cuh"
+#include"point.hpp"
+#include"board.hpp"
+#include"ball.hpp"
+#include"collision.cuh"
 using namespace std;
 
 #define NAIVE_CPU 0

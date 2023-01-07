@@ -1,5 +1,5 @@
-#include"Collision.cuh"
-#include "Ball.hpp"
+#include"collision.cuh"
+#include "ball.hpp"
 
 
 //Í¨ÓÃº¯Êý

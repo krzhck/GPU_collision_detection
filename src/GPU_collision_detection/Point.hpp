@@ -1,12 +1,9 @@
 #pragma once
 
-
 #include<math.h>
 using namespace std;
 
-#define PI 3.1415926
-
-
+#define PI 3.14159265
 
 //3D点的基类
 class Point
