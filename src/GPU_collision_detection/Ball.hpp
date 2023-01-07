@@ -1,6 +1,6 @@
 #pragma once
 #include<math.h>
-#include<freeglut/glut.h>
+#include<GL/glut.h>
 #include<vector>
 #include"Point.hpp"
 #include"Board.hpp"

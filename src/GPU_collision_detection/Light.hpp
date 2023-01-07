@@ -1,5 +1,5 @@
 #pragma once
-#include<freeglut/glut.h>
+#include<GL/glut.h>
 
 
 class Light
