@@ -5,7 +5,7 @@ using namespace std;
 
 #define PI 3.14159265
 
-//3D点的基类
+//3D碌茫碌脛禄霉脌脿
 class Point
 {
 public:
