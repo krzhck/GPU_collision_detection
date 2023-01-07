@@ -8,12 +8,12 @@ class Board
 public:
 	Point PointList[4];
 	Point Normal;
-	//²ÄÖÊ£¬ÎÆÀí£¬ÑÕÉ«ĞÅÏ¢
-	GLfloat Color[3] = { 0, 0, 0 }; //ÑÕÉ«
-	GLfloat Ambient[4] = { 0, 0, 0, 0 }; //»·¾³¹â
-	GLfloat Diffuse[4] = { 0, 0, 0, 0 }; //Âş·´Éä
-	GLfloat Specular[4] = { 0, 0, 0, 0 }; //¾µÃæ·´Éä
-	GLfloat Shininess[1] = { 0 }; //¾µÃæÖ¸Êı
+	//æè´¨ï¼Œçº¹ç†ï¼Œé¢œè‰²ä¿¡æ¯
+	GLfloat Color[3] = { 0, 0, 0 }; //é¢œè‰²
+	GLfloat Ambient[4] = { 0, 0, 0, 0 }; //ç¯å¢ƒå…‰
+	GLfloat Diffuse[4] = { 0, 0, 0, 0 }; //æ¼«åå°„
+	GLfloat Specular[4] = { 0, 0, 0, 0 }; //é•œé¢åå°„
+	GLfloat Shininess[1] = { 0 }; //é•œé¢æŒ‡æ•°
 
 
 	Board(){}
@@ -26,7 +26,7 @@ public:
 		GetNorm();
 	}
 
-	//³õÊ¼»¯ÑÕÉ«£¬ÎÆÀí£¬²ÄÖÊĞÅÏ¢
+	//åˆå§‹åŒ–é¢œè‰²ï¼Œçº¹ç†ï¼Œæè´¨ä¿¡æ¯
 	void InitColor(GLfloat color[], GLfloat ambient[], GLfloat diffuse[], GLfloat specular[], GLfloat shininess)
 	{
 		for (int i = 0; i < 3; i++)
@@ -36,14 +36,14 @@ public:
 			Diffuse[i] = diffuse[i];
 			Specular[i] = specular[i];
 		}
-		//Í¸Ã÷¶È£º1
+		//é€æ˜åº¦ï¼š1
 		Ambient[3] = 1.0;
 		Diffuse[3] = 1.0;
 		Specular[3] = 1.0;
 		Shininess[0] = shininess;
 	}
 
-	//ÇóÆ½Ãæ·¨ÏòÁ¿(·½ÏòÖ¸ÏòÍâ²à£©
+	//æ±‚å¹³é¢æ³•å‘é‡(æ–¹å‘æŒ‡å‘å¤–ä¾§ï¼‰
 	void GetNorm()
 	{
 		Point v1 = PointList[0];
@@ -66,7 +66,7 @@ public:
 		
 	}
 
-	//Çóµãµ½Æ½Ãæ¾àÀë
+	//æ±‚ç‚¹åˆ°å¹³é¢è·ç¦»
 	float GetDist(Point p)
 	{
 		GetNorm();
