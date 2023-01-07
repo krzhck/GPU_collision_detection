@@ -5,15 +5,15 @@
 class Light
 {
 public:
-	GLfloat Color[4] = { 0, 0, 0, 0 }; //±³¾°ÑÕÉ«
-	GLfloat Ambient[4] = { 0, 0, 0, 0 }; //»·¾³¹â
-	GLfloat Diffuse[4] = { 0, 0, 0, 0 }; //Âş·´Éä
-	GLfloat Specular[4] = { 0, 0, 0, 0 }; //¾µÃæ·´Éä
-	GLfloat Position[4] = { 0, 0, 0, 0 }; //¾µÃæÖ¸Êı
+	GLfloat Color[4] = { 0, 0, 0, 0 }; //èƒŒæ™¯é¢œè‰²
+	GLfloat Ambient[4] = { 0, 0, 0, 0 }; //ç¯å¢ƒå…‰
+	GLfloat Diffuse[4] = { 0, 0, 0, 0 }; //æ¼«åå°„
+	GLfloat Specular[4] = { 0, 0, 0, 0 }; //é•œé¢åå°„
+	GLfloat Position[4] = { 0, 0, 0, 0 }; //é•œé¢æŒ‡æ•°
 
 	Light() {}
 
-	//³õÊ¼»¯
+	//åˆå§‹åŒ–
 	void Init(GLfloat color[], GLfloat ambient[], GLfloat diffuse[], GLfloat specular[], GLfloat position[])
 	{
 		for (int i = 0; i < 3; i++)
@@ -24,13 +24,13 @@ public:
 			Specular[i] = specular[i];
 			Position[i] = position[i];
 		}
-		//Í¸Ã÷¶È£º1
+		//é€æ˜åº¦ï¼š1
 		Color[3] = 1.0;
 		Ambient[3] = 1.0;
 		Diffuse[3] = 1.0;
 		Specular[3] = 1.0;
 
-		//ÎŞÏŞÔ¶´¦Æ½ĞĞ¹â
+		//æ— é™è¿œå¤„å¹³è¡Œå…‰
 		Position[3] = 1.0; 
 	}
 };
