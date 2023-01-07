@@ -7,16 +7,16 @@ using namespace std;
 class Camera
 {
 public:
-	Point CurrentPlace; //µ±Ç°Ïà»úËùÔÚÎ»ÖÃ
-	Point LookCenter; //µ±Ç°µÄÊÓµãÖĞĞÄ£¬y×ø±êÒ»¶¨ÊÇ0
-	float R_Horizontal; //XOZÆ½ÃæµÄ°ë¾¶
-	float Arc_Horizontal; //XOZÆ½ÃæµÄ»¡¶È£¨0-2pi£©
-	float H_Vertical; //YÖá¸ß¶È
-	int MouseX; //ÉÏ´ÎÊó±êµÄÎ»ÖÃ
+	Point CurrentPlace; //å½“å‰ç›¸æœºæ‰€åœ¨ä½ç½®
+	Point LookCenter; //å½“å‰çš„è§†ç‚¹ä¸­å¿ƒï¼Œyåæ ‡ä¸€å®šæ˜¯0
+	float R_Horizontal; //XOZå¹³é¢çš„åŠå¾„
+	float Arc_Horizontal; //XOZå¹³é¢çš„å¼§åº¦ï¼ˆ0-2piï¼‰
+	float H_Vertical; //Yè½´é«˜åº¦
+	int MouseX; //ä¸Šæ¬¡é¼ æ ‡çš„ä½ç½®
 	int MouseY;
-	const float K_Horizontal = 0.002; //Ë®Æ½ÒÆ¶¯ËÙ¶È
-	const float K_Vertical = 0.03; //´¹Ö±ÒÆ¶¯ËÙ¶È
-	const float K_Translate = 0.2; //Æ½ÒÆËÙ¶È
+	const float K_Horizontal = 0.002; //æ°´å¹³ç§»åŠ¨é€Ÿåº¦
+	const float K_Vertical = 0.03; //å‚ç›´ç§»åŠ¨é€Ÿåº¦
+	const float K_Translate = 0.2; //å¹³ç§»é€Ÿåº¦
 public:
 	Camera(){}
 
@@ -41,14 +41,14 @@ public:
 		CurrentPlace.SetPlace(x, y, z);
 	}
 
-	//´¦Àí°´ÏÂÊó±êÊÂ¼ş
+	//å¤„ç†æŒ‰ä¸‹é¼ æ ‡äº‹ä»¶
 	void MouseDown(int x, int y)
 	{
 		MouseX = x;
 		MouseY = y;
 	}
 
-	//´¦ÀíÊó±êÒÆ¶¯ÊÂ¼ş:ºáÏòÒÆ¶¯¸Ä½Ç¶È£¬×İÏòÒÆ¶¯¸Ä¸ß¶È
+	//å¤„ç†é¼ æ ‡ç§»åŠ¨äº‹ä»¶:æ¨ªå‘ç§»åŠ¨æ”¹è§’åº¦ï¼Œçºµå‘ç§»åŠ¨æ”¹é«˜åº¦
 	void MouseMove(int x, int y)
 	{
 		int dx = x - MouseX;
@@ -62,13 +62,13 @@ public:
 		MouseY = y;
 	}
 
-	//´¦Àí¼üÅÌÒÆ¶¯ÊÂ¼ş£¬¸ü¸ÄË®Æ½Î»ÖÃºÍÊÓµãÖĞĞÄ
+	//å¤„ç†é”®ç›˜ç§»åŠ¨äº‹ä»¶ï¼Œæ›´æ”¹æ°´å¹³ä½ç½®å’Œè§†ç‚¹ä¸­å¿ƒ
 	void KeyboardMove(int type)
 	{
 		float change_x = 0;
 		float change_z = 0;
 		
-		//0123´ú±íWASD
+		//0123ä»£è¡¨WASD
 		if (type == 0)
 		{
 			change_x = -cos(Arc_Horizontal) * K_Translate;
