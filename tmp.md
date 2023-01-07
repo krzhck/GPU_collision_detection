@@ -13,8 +13,7 @@ https://zhuanlan.zhihu.com/p/34587739
   - SM: 5
 - OpenGL
   - https://zhuanlan.zhihu.com/p/402397399
-
-
+  - https://blog.csdn.net/m0_46821706/article/details/114597201
 
 
 #### TODO
@@ -27,7 +26,7 @@ https://zhuanlan.zhihu.com/p/34587739
 
 ### DOING
 
-把 include/GL 移动到了 system32 不 work
+~~把 include/GL 移动到了 system32 不 work~~
 
 https://zhuanlan.zhihu.com/p/402397399
 
