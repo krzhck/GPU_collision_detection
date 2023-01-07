@@ -10,23 +10,23 @@ using namespace std;
 class Ball
 {
 public:
-	//Î»ÖÃ£¬ËÙ¶ÈĞÅÏ¢
+	//ä½ç½®ï¼Œé€Ÿåº¦ä¿¡æ¯
 	Point CurrentPlace;
 	float Radius;
 	Point CurrentSpeed;
 	int BallComplexity;
 	float Weight;
 
-	//²ÄÖÊ£¬ÎÆÀí£¬ÑÕÉ«ĞÅÏ¢
-	GLfloat Color[3] = { 0, 0, 0 }; //ÑÕÉ«
-	GLfloat Ambient[4] = { 0, 0, 0, 0 }; //»·¾³¹â
-	GLfloat Diffuse[4] = { 0, 0, 0, 0 }; //Âş·´Éä
-	GLfloat Specular[4] = { 0, 0, 0, 0 }; //¾µÃæ·´Éä
-	GLfloat Shininess[4] = { 0 }; //¾µÃæÖ¸Êı
+	//æè´¨ï¼Œçº¹ç†ï¼Œé¢œè‰²ä¿¡æ¯
+	GLfloat Color[3] = { 0, 0, 0 }; //é¢œè‰²
+	GLfloat Ambient[4] = { 0, 0, 0, 0 }; //ç¯å¢ƒå…‰
+	GLfloat Diffuse[4] = { 0, 0, 0, 0 }; //æ¼«åå°„
+	GLfloat Specular[4] = { 0, 0, 0, 0 }; //é•œé¢åå°„
+	GLfloat Shininess[4] = { 0 }; //é•œé¢æŒ‡æ•°
 public:
 	Ball(){}
 
-	//³õÊ¼»¯Î»ÖÃ£¬ËÙ¶ÈĞÅÏ¢
+	//åˆå§‹åŒ–ä½ç½®ï¼Œé€Ÿåº¦ä¿¡æ¯
 	void InitPlace(float x, float y, float z, float radius, float speed_x, float speed_y, float speed_z)
 	{
 		CurrentPlace.SetPlace(x, y, z);
@@ -35,7 +35,7 @@ public:
 		Weight = radius * radius * radius;
 	}
 
-	//³õÊ¼»¯ÑÕÉ«£¬ÎÆÀí£¬²ÄÖÊĞÅÏ¢
+	//åˆå§‹åŒ–é¢œè‰²ï¼Œçº¹ç†ï¼Œæè´¨ä¿¡æ¯
 	void InitColor(GLfloat color[], GLfloat ambient[], GLfloat diffuse[], GLfloat specular[], GLfloat shininess, int complexity)
 	{
 		for (int i = 0; i < 3; i++)
@@ -45,7 +45,7 @@ public:
 			Diffuse[i] = diffuse[i];
 			Specular[i] = specular[i];
 		}
-		//Í¸Ã÷¶È£º1
+		//é€æ˜åº¦ï¼š1
 		Ambient[3] = 1.0;
 		Diffuse[3] = 1.0;
 		Specular[3] = 1.0;
@@ -53,16 +53,16 @@ public:
 		BallComplexity = complexity;
 	}
 
-	//»æÖÆÒ»¸öĞ¡Çò
+	//ç»˜åˆ¶ä¸€ä¸ªå°çƒ
 	void DrawSelf()
 	{
-		//ÉèÖÃÎÆÀí£¬²ÄÖÊµÈĞÅÏ¢
+		//è®¾ç½®çº¹ç†ï¼Œæè´¨ç­‰ä¿¡æ¯
 		glMaterialfv(GL_FRONT, GL_AMBIENT, Ambient);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, Diffuse);
 		glMaterialfv(GL_FRONT, GL_SPECULAR, Specular);
 		glMaterialfv(GL_FRONT, GL_SHININESS, Shininess);
 
-		//Æ½ÒÆµ½×ø±êÔ­µã£¬»æÖÆ£¬»Ö¸´×ø±ê
+		//å¹³ç§»åˆ°åæ ‡åŸç‚¹ï¼Œç»˜åˆ¶ï¼Œæ¢å¤åæ ‡
 		glPushMatrix();
 		glTranslatef(CurrentPlace.x, CurrentPlace.y, CurrentPlace.z);
 		glutSolidSphere(Radius, BallComplexity, BallComplexity);
@@ -70,9 +70,9 @@ public:
 	}
 
 	/*
-		ÃèÊö£º´¦ÀíĞ¡Çò×ÔĞĞÔË¶¯ºÍÓë±ß½çÅö×²
-		²ÎÊı£ºµ¥´ÎÔË¶¯Ê±¼ä£¬X·¶Î§£¨-X, X), Z·¶Î§(-Z, Z), Y·¶Î§(0, Y)
-		·µ»Ø£ºÎŞ
+		æè¿°ï¼šå¤„ç†å°çƒè‡ªè¡Œè¿åŠ¨å’Œä¸è¾¹ç•Œç¢°æ’
+		å‚æ•°ï¼šå•æ¬¡è¿åŠ¨æ—¶é—´ï¼ŒXèŒƒå›´ï¼ˆ-X, X), ZèŒƒå›´(-Z, Z), YèŒƒå›´(0, Y)
+		è¿”å›ï¼šæ— 
 	*/
 	void Move(float time, float XRange, float ZRange, float Height)
 	{
@@ -80,9 +80,9 @@ public:
 		HandleCollisionBoard(XRange, ZRange, Height);
 	}
 	/*
-		ÃèÊö£º´¦ÀíÓë±ß½çÏà×²
-		²ÎÊı£ºX·¶Î§£¨-X, X), Z·¶Î§(-Z, Z), Y·¶Î§(0, Y)
-		·µ»Ø£ºÎŞ
+		æè¿°ï¼šå¤„ç†ä¸è¾¹ç•Œç›¸æ’
+		å‚æ•°ï¼šXèŒƒå›´ï¼ˆ-X, X), ZèŒƒå›´(-Z, Z), YèŒƒå›´(0, Y)
+		è¿”å›ï¼šæ— 
 	*/
 	void HandleCollisionBoard(float XRange, float ZRange, float Height)
 	{
