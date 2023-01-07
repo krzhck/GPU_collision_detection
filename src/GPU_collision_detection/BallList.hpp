@@ -9,11 +9,6 @@
 #include"collision.cuh"
 using namespace std;
 
-#define NAIVE_CPU 0
-#define NAIVE_GPU 1
-#define FAST_CPU 2
-#define FAST_GPU 3
-
 class BallList
 {
 public:
@@ -26,7 +21,6 @@ public:
 	int NBalls;
 	float MaxRadius;
 	float TimeOnce;
-	int Mode;
 	float GridSize;
 	int GridX, GridY, GridZ;
 
@@ -35,7 +29,7 @@ public:
 	描述：初始化位置信息
 	参数：x范围（实际是-x到x），y范围（0到y），z范围（-z到z），每个轴上球个数（实际num的立方个球），球最大半径，模式
 	*/
-	void Init(float x, float y, float z, int num, float max_radius, float time_once, int mode)
+	void Init(float x, float y, float z, int num, float max_radius, float time_once)
 	{
 		XRange = x;
 		ZRange = z;
@@ -43,7 +37,6 @@ public:
 		Num = num;
 		MaxRadius = max_radius;
 		TimeOnce = time_once;
-		Mode = mode;
 		NBalls = num * num * num;
 		balls = new Ball[NBalls];
 		GridSize = max_radius * 1.5;
@@ -157,6 +150,7 @@ public:
 		clock_t start, end;
 		start = clock();
 
+		// CUDA collision detection
 		UpdateBallsGridGPU(balls, TimeOnce, XRange, ZRange, Height, GridSize, GridX, GridY, GridZ, NBalls);
 
 		end = clock();

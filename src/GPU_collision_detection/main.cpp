@@ -18,7 +18,6 @@ const char WindowName[] = "collision detection";
 const float TimeOnce = 0.02; //刷新时间
 const int BallNum = 5;
 const float XRange = 10, ZRange = 10, Height = 20, MaxRadius = 1; //场景的X,Y,Z范围（-X,X),(0,H),(-Z,Z)
-int GlobalMode = -1;
 
 //光照，相机
 Camera TheCamera;
@@ -140,7 +139,7 @@ void InitScene()
 	InitLight();
 	InitCamera();
 	InitBoards();
-	Balls.Init(XRange, Height, ZRange, BallNum, MaxRadius, TimeOnce, GlobalMode);
+	Balls.Init(XRange, Height, ZRange, BallNum, MaxRadius, TimeOnce);
 	Balls.InitBalls();
 }
 
@@ -270,51 +269,8 @@ void reshape(int w, int h)
 	glMatrixMode(GL_MODELVIEW);
 }
 
-void InitSettings()
-{
-	GlobalMode = FAST_GPU;
-	/*
-	while (1)
-	{
-		int mode;
-		cout << "请输出碰撞检测算法类型" << endl;
-		cout << "0：串行，循环碰撞检测" << endl;
-		cout << "1：并行，循环碰撞检测" << endl;
-		cout << "2：串行，空间划分碰撞检测" << endl;
-		cout << "3：并行，空间划分碰撞检测" << endl;
-		cin >> mode;
-		if (mode >= 0 && mode <= 3)
-		{
-			cout << "当前模式为：";
-			if (mode == NAIVE_CPU)
-			{
-				cout << "0：串行，循环碰撞检测" << endl;
-			}
-			else if (mode == NAIVE_GPU)
-			{
-				cout << "1：并行，循环碰撞检测" << endl;
-			}
-			else if (mode == FAST_CPU)
-			{
-				cout << "2：串行，空间划分碰撞检测" << endl;
-			}
-			else if (mode == FAST_GPU)
-			{
-				cout << "3：并行，空间划分碰撞检测" << endl;
-			}
-			break;
-		}
-		else
-		{
-			printf("输入不合法，请重新输入！\n");
-		}
-	}
-	*/
-}
-
 int main(int argc, char** argv)
 {
-	InitSettings();
 	glutInit(&argc, argv);
 	InitWindow();             //初始化窗口
 	InitScene();              //初始化场景
