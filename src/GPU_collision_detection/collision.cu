@@ -2,7 +2,7 @@
 #include "ball.hpp"
 
 
-//Í¨ÓÃº¯Êı
+//é€šç”¨å‡½æ•°
 
 __device__ float Dist(float x, float y, float z)
 {
@@ -20,9 +20,9 @@ __device__ float Multiply(Point& a, Point& b)
 }
 
 /*
-	ÃèÊö£º´¦ÀíÓë±ß½çÏà×²
-	²ÎÊı£ºX·¶Î§£¨-X, X), Z·¶Î§(-Z, Z), Y·¶Î§(0, Y)
-	·µ»Ø£ºÎŞ
+	æè¿°ï¼šå¤„ç†ä¸è¾¹ç•Œç›¸æ’
+	å‚æ•°ï¼šXèŒƒå›´ï¼ˆ-X, X), ZèŒƒå›´(-Z, Z), YèŒƒå›´(0, Y)
+	è¿”å›ï¼šæ— 
 */
 __device__ void HandleCollisionBoard(Ball& ball, float XRange, float ZRange, float Height)
 {
@@ -60,9 +60,9 @@ __device__ void HandleCollisionBoard(Ball& ball, float XRange, float ZRange, flo
 
 
 /*
-	ÃèÊö£º´¦ÀíĞ¡Çò×ÔĞĞÔË¶¯ºÍÓë±ß½çÅö×²
-	²ÎÊı£ºµ¥´ÎÔË¶¯Ê±¼ä£¬X·¶Î§£¨-X, X), Z·¶Î§(-Z, Z), Y·¶Î§(0, Y)
-	·µ»Ø£ºÎŞ
+	æè¿°ï¼šå¤„ç†å°çƒè‡ªè¡Œè¿åŠ¨å’Œä¸è¾¹ç•Œç¢°æ’
+	å‚æ•°ï¼šå•æ¬¡è¿åŠ¨æ—¶é—´ï¼ŒXèŒƒå›´ï¼ˆ-X, X), ZèŒƒå›´(-Z, Z), YèŒƒå›´(0, Y)
+	è¿”å›ï¼šæ— 
 */
 __device__ void BallMove(Ball& ball, float time, float XRange, float ZRange, float Height)
 {
@@ -74,9 +74,9 @@ __device__ void BallMove(Ball& ball, float time, float XRange, float ZRange, flo
 }
 
 /*
-	ÃèÊö£ºÅĞ¶ÏÁ½¸öÇòÊÇ·ñÏà×²
-	²ÎÊı£ºÇòa£¬Çòb
-	·µ»Ø£ºÊÇ1£¬·ñ0
+	æè¿°ï¼šåˆ¤æ–­ä¸¤ä¸ªçƒæ˜¯å¦ç›¸æ’
+	å‚æ•°ï¼šçƒaï¼Œçƒb
+	è¿”å›ï¼šæ˜¯1ï¼Œå¦0
 */
 __device__ bool JudgeCollision(Ball& a, Ball& b)
 {
@@ -96,20 +96,20 @@ __device__ bool JudgeCollision(Ball& a, Ball& b)
 }
 
 /*
-	ÃèÊö£ºÁ½ÇòÏà×²ºó¸üĞÂËÙ¶È
-	²ÎÊı£ºÇòa£¬Çòb
-	·µ»Ø£ºÎŞ
+	æè¿°ï¼šä¸¤çƒç›¸æ’åæ›´æ–°é€Ÿåº¦
+	å‚æ•°ï¼šçƒaï¼Œçƒb
+	è¿”å›ï¼šæ— 
 */
 __device__ void ChangeSpeed(Ball& a, Ball& b)
 {
-	//¾¶ÏòËÙ¶È°´ÕÕÖÊÁ¿×ö±ä»»£¬·¨ÏòËÙ¶È²»±ä
+	//å¾„å‘é€Ÿåº¦æŒ‰ç…§è´¨é‡åšå˜æ¢ï¼Œæ³•å‘é€Ÿåº¦ä¸å˜
 	float dist = 0;
 	float diff_x = b.CurrentPlace.x - a.CurrentPlace.x;
 	float diff_y = b.CurrentPlace.y - a.CurrentPlace.y;
 	float diff_z = b.CurrentPlace.z - a.CurrentPlace.z;
 	dist = Dist(diff_x, diff_y, diff_z);
 
-	//Çó¾¶Ïò£¬·¨ÏòËÙ¶È
+	//æ±‚å¾„å‘ï¼Œæ³•å‘é€Ÿåº¦
 	float rate_collide_a = (a.CurrentSpeed.x * diff_x + a.CurrentSpeed.y * diff_y + a.CurrentSpeed.z * diff_z) / dist / dist;
 	float speed_collide_a_x = diff_x * rate_collide_a;
 	float speed_collide_a_y = diff_y * rate_collide_a;
@@ -129,7 +129,7 @@ __device__ void ChangeSpeed(Ball& a, Ball& b)
 	float unchanged_b_z = b.CurrentSpeed.z - speed_collide_b_z;
 
 
-	//¼ÙÉèb²»¶¯£¬a×²b£¬¸üĞÂÁ½Õß¾¶ÏòËÙ¶È
+	//å‡è®¾bä¸åŠ¨ï¼Œaæ’bï¼Œæ›´æ–°ä¸¤è€…å¾„å‘é€Ÿåº¦
 	float speed_collide_new_a_x = (speed_collide_a_x * (a.Weight - b.Weight) + speed_collide_b_x * (2 * b.Weight)) / (a.Weight + b.Weight);
 	float speed_collide_new_a_y = (speed_collide_a_y * (a.Weight - b.Weight) + speed_collide_b_y * (2 * b.Weight)) / (a.Weight + b.Weight);
 	float speed_collide_new_a_z = (speed_collide_a_z * (a.Weight - b.Weight) + speed_collide_b_z * (2 * b.Weight)) / (a.Weight + b.Weight);
@@ -148,15 +148,15 @@ __device__ void ChangeSpeed(Ball& a, Ball& b)
 }
 
 /*
-ÃèÊö£ºÔÚÇòÖ®¼äµÄÅö×²¼ì²âÍê³Éºó£¬´¦ÀíÇòµÄÔË¶¯ÒÔ¼°ºÍ±ß½çµÄÅö×²£¨²¢ĞĞ£©
-²ÎÊı£ºÇòÁĞ±í£¬Ò»´ÎµÄÊ±¼ä£¬X·¶Î§(-X,X),Z·¶Î§(-Z,Z),Y·¶Î§(0,Y)£¬Çò¸öÊı
-·µ»Ø£ºÎŞ£¬µ«ÊÇ¸üĞÂÇòÁĞ±í
+æè¿°ï¼šåœ¨çƒä¹‹é—´çš„ç¢°æ’æ£€æµ‹å®Œæˆåï¼Œå¤„ç†çƒçš„è¿åŠ¨ä»¥åŠå’Œè¾¹ç•Œçš„ç¢°æ’ï¼ˆå¹¶è¡Œï¼‰
+å‚æ•°ï¼šçƒåˆ—è¡¨ï¼Œä¸€æ¬¡çš„æ—¶é—´ï¼ŒXèŒƒå›´(-X,X),ZèŒƒå›´(-Z,Z),YèŒƒå›´(0,Y)ï¼Œçƒä¸ªæ•°
+è¿”å›ï¼šæ— ï¼Œä½†æ˜¯æ›´æ–°çƒåˆ—è¡¨
 */
 __global__ void UpdateBallsMove(Ball* balls, float TimeOnce, float XRange, float ZRange, float Height, int N)
 {
-	// »ñÈ¡È«¾ÖË÷Òı
+	// è·å–å…¨å±€ç´¢å¼•
 	int index = threadIdx.x + blockIdx.x * blockDim.x;
-	// ²½³¤
+	// æ­¥é•¿
 	int stride = blockDim.x * gridDim.x;
 	for (int i = index; i < N; i += stride)
 	{
@@ -166,17 +166,17 @@ __global__ void UpdateBallsMove(Ball* balls, float TimeOnce, float XRange, float
 }
 
 
-//±©Á¦Ëã·¨Ïà¹Øº¯Êı
+//æš´åŠ›ç®—æ³•ç›¸å…³å‡½æ•°
 /*
-ÃèÊö£º±©Á¦Ëã·¨´¦ÀíÅö×²¼ì²âºÍËÙ¶È¸üĞÂ
-²ÎÊı£ºÇòÁĞ±í£¬N¸öÇò
-·µ»Ø£ºÎŞ£¬µ«ÊÇ¸üĞÂÇòÁĞ±í
+æè¿°ï¼šæš´åŠ›ç®—æ³•å¤„ç†ç¢°æ’æ£€æµ‹å’Œé€Ÿåº¦æ›´æ–°
+å‚æ•°ï¼šçƒåˆ—è¡¨ï¼ŒNä¸ªçƒ
+è¿”å›ï¼šæ— ï¼Œä½†æ˜¯æ›´æ–°çƒåˆ—è¡¨
 */
 __global__ void HandleCollisionNaive(Ball* balls, int N)
 {
-	// »ñÈ¡È«¾ÖË÷Òı
+	// è·å–å…¨å±€ç´¢å¼•
 	int index = threadIdx.x + blockIdx.x * blockDim.x;
-	// ²½³¤
+	// æ­¥é•¿
 	int stride = blockDim.x * gridDim.x;
 	for (int k = index; k < N * N; k += stride)
 	{
@@ -195,47 +195,47 @@ __global__ void HandleCollisionNaive(Ball* balls, int N)
 
 
 /*
-ÃèÊö£ºGPUÅö×²¼ì²â+ÔË¶¯¸üĞÂÖ÷º¯Êı£¨±©Á¦Ëã·¨£©
-²ÎÊı£ºÇòÁĞ±í£¬Ò»´ÎµÄÊ±¼ä£¬X·¶Î§(-X,X),Z·¶Î§(-Z,Z),Y·¶Î§(0,Y)£¬Çò¸öÊı
-·µ»Ø£ºÎŞ£¬µ«ÊÇ¸üĞÂÇòÁĞ±í
+æè¿°ï¼šGPUç¢°æ’æ£€æµ‹+è¿åŠ¨æ›´æ–°ä¸»å‡½æ•°ï¼ˆæš´åŠ›ç®—æ³•ï¼‰
+å‚æ•°ï¼šçƒåˆ—è¡¨ï¼Œä¸€æ¬¡çš„æ—¶é—´ï¼ŒXèŒƒå›´(-X,X),ZèŒƒå›´(-Z,Z),YèŒƒå›´(0,Y)ï¼Œçƒä¸ªæ•°
+è¿”å›ï¼šæ— ï¼Œä½†æ˜¯æ›´æ–°çƒåˆ—è¡¨
 */
 void UpdateBallsNaiveGPU(Ball* balls, float TimeOnce, float XRange, float ZRange, float Height, int N)
 {
-	// ÉêÇëÍĞ¹ÜÄÚ´æ
+	// ç”³è¯·æ‰˜ç®¡å†…å­˜
 	int nBytes = N * sizeof(Ball);
 	Ball* balls_gpu;
 	cudaMallocManaged((void**)&balls_gpu, nBytes);
 
-	// ³õÊ¼»¯Êı¾İ
+	// åˆå§‹åŒ–æ•°æ®
 	cudaMemcpy((void*)balls_gpu, (void*)balls, nBytes, cudaMemcpyHostToDevice);
 
-	// ¶¨ÒåkernelµÄÖ´ĞĞÅäÖÃ
+	// å®šä¹‰kernelçš„æ‰§è¡Œé…ç½®
 	dim3 blockSize(256);
 	dim3 gridSize((N + blockSize.x - 1) / blockSize.x);
 
-	// Ö´ĞĞkernel
+	// æ‰§è¡Œkernel
 	HandleCollisionNaive << < gridSize, blockSize >> > (balls_gpu, N);
-	// Í¬²½device ±£Ö¤½á¹ûÄÜÕıÈ··ÃÎÊ
+	// åŒæ­¥device ä¿è¯ç»“æœèƒ½æ­£ç¡®è®¿é—®
 	cudaDeviceSynchronize();
 
-	// Ö´ĞĞkernel
+	// æ‰§è¡Œkernel
 	UpdateBallsMove <<< gridSize, blockSize >>> (balls_gpu, TimeOnce, XRange, ZRange, Height, N);
-	// Í¬²½device ±£Ö¤½á¹ûÄÜÕıÈ··ÃÎÊ
+	// åŒæ­¥device ä¿è¯ç»“æœèƒ½æ­£ç¡®è®¿é—®
 	cudaDeviceSynchronize();
 
-	// ¼ÇÂ¼½á¹û
+	// è®°å½•ç»“æœ
 	cudaMemcpy((void*)balls, (void*)balls_gpu, nBytes, cudaMemcpyDeviceToHost);
 
-	// ÊÍ·ÅÄÚ´æ
+	// é‡Šæ”¾å†…å­˜
 	cudaFree(balls_gpu);
 }
 
 
-//¿Õ¼ä»®·ÖËã·¨Ïà¹Øº¯Êı
+//ç©ºé—´åˆ’åˆ†ç®—æ³•ç›¸å…³å‡½æ•°
 /*
-ÃèÊö£º³õÊ¼»¯cells£¬objectsÊı×é£¬Ç°Õß¼ÇÂ¼ÎïÌåËùÔÚµÄ¸ñ×ÓĞÅÏ¢£¨¸ñ×Óx£¬y£¬zµÄid£¬home»¹ÊÇphantom£©£¬ºóÕß¼ÇÂ¼ÎïÌåidºÍhome/phantom
-²ÎÊı£º¿ÕµÄcell£¬phantom£»ÇòÁĞ±íºÍ¸öÊı£¬»¹ÓĞ¸÷ÖÖ¸ñ×ÓĞÅÏ¢
-·µ»Ø£º¸üĞÂcells£¬objectsÊı×éºÍcell_num
+æè¿°ï¼šåˆå§‹åŒ–cellsï¼Œobjectsæ•°ç»„ï¼Œå‰è€…è®°å½•ç‰©ä½“æ‰€åœ¨çš„æ ¼å­ä¿¡æ¯ï¼ˆæ ¼å­xï¼Œyï¼Œzçš„idï¼Œhomeè¿˜æ˜¯phantomï¼‰ï¼Œåè€…è®°å½•ç‰©ä½“idå’Œhome/phantom
+å‚æ•°ï¼šç©ºçš„cellï¼Œphantomï¼›çƒåˆ—è¡¨å’Œä¸ªæ•°ï¼Œè¿˜æœ‰å„ç§æ ¼å­ä¿¡æ¯
+è¿”å›ï¼šæ›´æ–°cellsï¼Œobjectsæ•°ç»„å’Œcell_num
 */
 __global__ void InitCellKernel(uint32_t *cells, uint32_t *objects, Ball* balls, int N,
 	float XRange, float ZRange, float Height, float GridSize, int GridX, int GridY, int GridZ) 
@@ -244,7 +244,7 @@ __global__ void InitCellKernel(uint32_t *cells, uint32_t *objects, Ball* balls, 
 
 	for (int i = blockIdx.x * blockDim.x + threadIdx.x; i < N; i += gridDim.x * blockDim.x)
 	{
-		int current_cell_id = i * 8; //Ã¿¸öÇò×î¶àÔÚ8¸ö¸ñ×ÓÄÚ
+		int current_cell_id = i * 8; //æ¯ä¸ªçƒæœ€å¤šåœ¨8ä¸ªæ ¼å­å†…
 		int cell_info = 0;
 		int object_info = 0;
 		int current_count = 0;
@@ -253,7 +253,7 @@ __global__ void InitCellKernel(uint32_t *cells, uint32_t *objects, Ball* balls, 
 		float z = balls[i].CurrentPlace.z;
 		float radius = balls[i].Radius;
 
-		//ÕÒµ½home cell
+		//æ‰¾åˆ°home cell
 		int hash_x = (x + XRange) / GridSize;
 		int hash_y = (y) / GridSize;
 		int hash_z = (z + ZRange) / GridSize;
@@ -265,7 +265,7 @@ __global__ void InitCellKernel(uint32_t *cells, uint32_t *objects, Ball* balls, 
 		count++;
 		current_count++;
 
-		//ÕÒphantom
+		//æ‰¾phantom
 		for (int dx = -1; dx <= 1; dx++)
 		{
 			for (int dy = -1; dy <= 1; dy++)
@@ -276,13 +276,13 @@ __global__ void InitCellKernel(uint32_t *cells, uint32_t *objects, Ball* balls, 
 					int new_hash_y = hash_y + dy;
 					int new_hash_z = hash_z + dz;
 
-					//×Ô¼º²»¿¼ÂÇ
+					//è‡ªå·±ä¸è€ƒè™‘
 					if (dx == 0 && dy == 0 && dz == 0)
 					{
 						continue;
 					}
 
-					//Ô½½ç²»¿¼ÂÇ
+					//è¶Šç•Œä¸è€ƒè™‘
 					if (new_hash_x < 0 || new_hash_x >= GridX ||
 						new_hash_y < 0 || new_hash_y >= GridY ||
 						new_hash_z < 0 || new_hash_z >= GridZ)
@@ -351,7 +351,7 @@ __global__ void InitCellKernel(uint32_t *cells, uint32_t *objects, Ball* balls, 
 			}
 		}
 
-		//²¹Æë
+		//è¡¥é½
 		while (current_count < 8)
 		{
 
@@ -366,9 +366,9 @@ __global__ void InitCellKernel(uint32_t *cells, uint32_t *objects, Ball* balls, 
 }
 
 /*
-ÃèÊö£º³õÊ¼»¯cells£¬ objectsÊı×éµÄÖ÷º¯Êı
-²ÎÊı£º¿ÕµÄcell£¬phantom£»ÇòÁĞ±íºÍ¸öÊı£¬»¹ÓĞ¸÷ÖÖ¸ñ×ÓĞÅÏ¢£¬Ïß³ÌĞÅÏ¢
-·µ»Ø£º¸üĞÂcells£¬objectsÊı×éºÍcell_num
+æè¿°ï¼šåˆå§‹åŒ–cellsï¼Œ objectsæ•°ç»„çš„ä¸»å‡½æ•°
+å‚æ•°ï¼šç©ºçš„cellï¼Œphantomï¼›çƒåˆ—è¡¨å’Œä¸ªæ•°ï¼Œè¿˜æœ‰å„ç§æ ¼å­ä¿¡æ¯ï¼Œçº¿ç¨‹ä¿¡æ¯
+è¿”å›ï¼šæ›´æ–°cellsï¼Œobjectsæ•°ç»„å’Œcell_num
  */
 void InitCells(uint32_t *cells, uint32_t *objects, Ball* balls, int N,
 	 float XRange, float ZRange, float Height, float GridSize, int GridX, int GridY, int GridZ, 
@@ -380,9 +380,9 @@ void InitCells(uint32_t *cells, uint32_t *objects, Ball* balls, int N,
 
 
 /*
-ÃèÊö£º¼ÆËãÇ°iºÍµÄËã·¨
-²ÎÊı£ºÔ­Ê¼Êı×é£¬¸öÊın
-·µ»Ø£ºÔ­Ê¼Êı×é±ä³ÉÇ°i¸öºÍÊı×é
+æè¿°ï¼šè®¡ç®—å‰iå’Œçš„ç®—æ³•
+å‚æ•°ï¼šåŸå§‹æ•°ç»„ï¼Œä¸ªæ•°n
+è¿”å›ï¼šåŸå§‹æ•°ç»„å˜æˆå‰iä¸ªå’Œæ•°ç»„
 */
 __device__ void PrefixSum(uint32_t *values, unsigned int n) 
 {
@@ -426,9 +426,9 @@ __device__ void PrefixSum(uint32_t *values, unsigned int n)
 }
 
 /*
-ÃèÊö£º¶ÔcellsÇóÇ°×ººÍ
-²ÎÊı£ºcells£¬´ı¸üĞÂÇ°×ººÍ£¬N¸öcell£¬Æ«ÒÆÁ¿
-·µ»Ø£º¸üĞÂÇ°×ººÍ
+æè¿°ï¼šå¯¹cellsæ±‚å‰ç¼€å’Œ
+å‚æ•°ï¼šcellsï¼Œå¾…æ›´æ–°å‰ç¼€å’Œï¼ŒNä¸ªcellï¼Œåç§»é‡
+è¿”å›ï¼šæ›´æ–°å‰ç¼€å’Œ
 */
 __global__ void GetRadixSum(uint32_t *cells, uint32_t *radix_sums, int N, int shift)
  {
@@ -437,7 +437,7 @@ __global__ void GetRadixSum(uint32_t *cells, uint32_t *radix_sums, int N, int sh
 	 int num_indices = 1 << RADIX_LENGTH;
 
 
-	 //³õÊ¼»¯
+	 //åˆå§‹åŒ–
 	 for (int i = index; i < num_indices; i++)
 	 {
 		 radix_sums[i] = 0;
@@ -445,10 +445,10 @@ __global__ void GetRadixSum(uint32_t *cells, uint32_t *radix_sums, int N, int sh
 	 __syncthreads();
 
 
-	 //ÇóºÍ
+	 //æ±‚å’Œ
 	 for (int i = index; i < N; i += stride)
 	 {
-		 //·Ç³£ÖØÒª£¬²»ÕâÑù×öÎŞ·¨ÓĞĞ§ÇóºÍ
+		 //éå¸¸é‡è¦ï¼Œä¸è¿™æ ·åšæ— æ³•æœ‰æ•ˆæ±‚å’Œ
 		 for (int j = 0; j < blockDim.x; j++)
 		 {
 			 if (threadIdx.x % blockDim.x == j)
@@ -460,15 +460,15 @@ __global__ void GetRadixSum(uint32_t *cells, uint32_t *radix_sums, int N, int sh
 
 	 }
 	 __syncthreads();
-	 //ÇóÇ°×ººÍ
+	 //æ±‚å‰ç¼€å’Œ
 	 PrefixSum(radix_sums, num_indices);
 	 __syncthreads();
 }
 
  /*
- ÃèÊö£ºÖØĞÂ·ÖÅäÔªËØ
- ²ÎÊı£ºcells£¬objectÊı×é£¬ËûÃÇ´ı¸üĞÂµÄ·ÖÅä½á¹ûtemp£¬Ç°×ººÍÊı×é£¬N¸öÔªËØ£¬Æ«ÒÆÁ¿£¬Ã¿¸öÏß³Ì´¦Àí¼¸¸öcell
- ·µ»Ø£º¸üĞÂÇ°×ººÍ
+ æè¿°ï¼šé‡æ–°åˆ†é…å…ƒç´ 
+ å‚æ•°ï¼šcellsï¼Œobjectæ•°ç»„ï¼Œä»–ä»¬å¾…æ›´æ–°çš„åˆ†é…ç»“æœtempï¼Œå‰ç¼€å’Œæ•°ç»„ï¼ŒNä¸ªå…ƒç´ ï¼Œåç§»é‡ï¼Œæ¯ä¸ªçº¿ç¨‹å¤„ç†å‡ ä¸ªcell
+ è¿”å›ï¼šæ›´æ–°å‰ç¼€å’Œ
  */
 __global__ void RearrangeCell(uint32_t *cells, uint32_t *objects, uint32_t *cells_temp, uint32_t *objects_temp, 
 	 uint32_t *radix_sums, int N, int shift)
@@ -478,7 +478,7 @@ __global__ void RearrangeCell(uint32_t *cells, uint32_t *objects, uint32_t *cell
 	 int num_radices = 1 << RADIX_LENGTH;
 
 	 if (index != 0) return;
-	 //·ÖÅä
+	 //åˆ†é…
 	 for (int i = 0; i < N; i ++ )
 	 {
 		int current_radix_num = (cells[i] >> shift) & (num_radices - 1);
@@ -489,15 +489,15 @@ __global__ void RearrangeCell(uint32_t *cells, uint32_t *objects, uint32_t *cell
  }
 
 /*
-ÃèÊö£º»ñÈ¡ÅÅĞòºóÊı×éµÄindex£¨cell±ä»¯µÄÎ»ÖÃ£©
-²ÎÊı£ºcell£¬cell¸öÊıN,´ı¸üĞÂµÄindice£¬´ı¸üĞÂµÄindice¸öÊı
-·µ»Ø£ºÎŞ£¬µ«ÊÇ¸üĞÂindiceÊı×éºÍindice¸öÊı
+æè¿°ï¼šè·å–æ’åºåæ•°ç»„çš„indexï¼ˆcellå˜åŒ–çš„ä½ç½®ï¼‰
+å‚æ•°ï¼šcellï¼Œcellä¸ªæ•°N,å¾…æ›´æ–°çš„indiceï¼Œå¾…æ›´æ–°çš„indiceä¸ªæ•°
+è¿”å›ï¼šæ— ï¼Œä½†æ˜¯æ›´æ–°indiceæ•°ç»„å’Œindiceä¸ªæ•°
 */
 __global__ void GetCellIndex(uint32_t *cells, int N, uint32_t* indices, uint32_t* num_indices)
 {
 	int index = threadIdx.x + blockIdx.x * blockDim.x;
 	int stride = blockDim.x * gridDim.x;
-	//Ö»ÄÜ´®ĞĞ
+	//åªèƒ½ä¸²è¡Œ
 	if (index != 0) return;
 	num_indices[0] = 0;
 	uint32_t mask = (1 << 24) - 1;
@@ -523,9 +523,9 @@ __global__ void GetCellIndex(uint32_t *cells, int N, uint32_t* indices, uint32_t
 
 
 /*
-ÃèÊö£º¶Ôcell£¬object×ö»ùÊıÅÅĞò£¬²¢ÇÒ»ñÈ¡index£¨cell±ä»¯µÄÎ»ÖÃ£©
-²ÎÊı£ºcell£¬objectÊı×é£»ËûÃÇµÄtempĞÎÊ½ÓÃÓÚÅÅĞò£»´ıÇóµÄÇ°×ººÍÊı×é£»cell¸öÊı£»´ıÇóµÄindexÊı×éºÍ³¤¶È£»Ïß³ÌÇé¿ö
-·µ»Ø£ºÎŞ£¬µ«ÊÇ¸üĞÂcell£¬objectÊı×é£¬»¹ÓĞindexÊı×éºÍÆä³¤¶È
+æè¿°ï¼šå¯¹cellï¼ŒobjectåšåŸºæ•°æ’åºï¼Œå¹¶ä¸”è·å–indexï¼ˆcellå˜åŒ–çš„ä½ç½®ï¼‰
+å‚æ•°ï¼šcellï¼Œobjectæ•°ç»„ï¼›ä»–ä»¬çš„tempå½¢å¼ç”¨äºæ’åºï¼›å¾…æ±‚çš„å‰ç¼€å’Œæ•°ç»„ï¼›cellä¸ªæ•°ï¼›å¾…æ±‚çš„indexæ•°ç»„å’Œé•¿åº¦ï¼›çº¿ç¨‹æƒ…å†µ
+è¿”å›ï¼šæ— ï¼Œä½†æ˜¯æ›´æ–°cellï¼Œobjectæ•°ç»„ï¼Œè¿˜æœ‰indexæ•°ç»„å’Œå…¶é•¿åº¦
 */
 void SortCells(uint32_t *cells, uint32_t *objects, uint32_t *cells_temp, uint32_t *objects_temp,
 	uint32_t *radix_sums, int N, uint32_t* indices, uint32_t* num_indices,
@@ -535,14 +535,14 @@ void SortCells(uint32_t *cells, uint32_t *objects, uint32_t *cells_temp, uint32_
 	uint32_t *objects_swap;
 	for (int i = 0; i < 32; i += RADIX_LENGTH)
 	{
-		//ÇóÇ°×ººÍ
+		//æ±‚å‰ç¼€å’Œ
 		GetRadixSum <<< num_blocks, threads_per_block >>> (cells, radix_sums, N, i);
 
-		//ÓÃÇ°×ººÍÖØĞÂ·ÖÅä
+		//ç”¨å‰ç¼€å’Œé‡æ–°åˆ†é…
 		RearrangeCell << < num_blocks, threads_per_block >> > (cells, objects, cells_temp, objects_temp,
 			radix_sums, N, i);
 		
-		//½»»»Ô­Ê¼ºÍtemp
+		//äº¤æ¢åŸå§‹å’Œtemp
 		cells_swap = cells;
 		cells = cells_temp;
 		cells_temp = cells_swap;
@@ -554,9 +554,9 @@ void SortCells(uint32_t *cells, uint32_t *objects, uint32_t *cells_temp, uint32_
 }
 
 /*
-ÃèÊö£ºcudaÅö×²¼ì²âºÍ´¦Àíº¯Êı
-²ÎÊı£ºcellºÍobjectÊı×é£¬ballÊı×é£¬ÇòºÍcellµÄ¸öÊı£¬indexÊı×éºÍ¸öÊı£¬Ïß³ÌĞÅÏ¢£¬³¡¾°µÄ¸÷ÖÖÏŞÖÆºÍ¸ñ×ÓĞÅÏ¢
-·µ»Ø£ºÎŞ£¬µ«ÊÇ½øĞĞÅö×²¼ì²âºÍ´¦Àí
+æè¿°ï¼šcudaç¢°æ’æ£€æµ‹å’Œå¤„ç†å‡½æ•°
+å‚æ•°ï¼šcellå’Œobjectæ•°ç»„ï¼Œballæ•°ç»„ï¼Œçƒå’Œcellçš„ä¸ªæ•°ï¼Œindexæ•°ç»„å’Œä¸ªæ•°ï¼Œçº¿ç¨‹ä¿¡æ¯ï¼Œåœºæ™¯çš„å„ç§é™åˆ¶å’Œæ ¼å­ä¿¡æ¯
+è¿”å›ï¼šæ— ï¼Œä½†æ˜¯è¿›è¡Œç¢°æ’æ£€æµ‹å’Œå¤„ç†
 */
 __global__ void HandleCollisionCuda(uint32_t *cells, uint32_t *objects, Ball* balls, int num_balls, int num_cells,
 	uint32_t* indices, uint32_t num_indices, unsigned int group_per_thread,
@@ -565,7 +565,7 @@ __global__ void HandleCollisionCuda(uint32_t *cells, uint32_t *objects, Ball* ba
 	int index = threadIdx.x + blockIdx.x * blockDim.x;
 	for (int group_num = 0; group_num < group_per_thread; group_num++)
 	{
-		//ÅĞ¶ÏÊÇ·ñÔ½½ç£¬ÕÒµ½´¦ÀíµÄstart£¬end
+		//åˆ¤æ–­æ˜¯å¦è¶Šç•Œï¼Œæ‰¾åˆ°å¤„ç†çš„startï¼Œend
 		int cell_id = index * group_per_thread + group_num;
 		if (cell_id >= num_indices)
 		{
@@ -582,7 +582,7 @@ __global__ void HandleCollisionCuda(uint32_t *cells, uint32_t *objects, Ball* ba
 			start = indices[cell_id - 1];
 		}
 
-		//ÕÒÆäÖĞhomeµÄ¸öÊı
+		//æ‰¾å…¶ä¸­homeçš„ä¸ªæ•°
 		int home_num = 0;
 		for (int i = start; i < end; i++)
 		{
@@ -597,7 +597,7 @@ __global__ void HandleCollisionCuda(uint32_t *cells, uint32_t *objects, Ball* ba
 			}
 		}
 
-		//±éÀúÅö×²¼ì²â
+		//éå†ç¢°æ’æ£€æµ‹
 		for (int i = start; i < start + home_num; i++)
 		{
 			if (cells[i] == UINT32_MAX) break;
@@ -608,7 +608,7 @@ __global__ void HandleCollisionCuda(uint32_t *cells, uint32_t *objects, Ball* ba
 				if (cells[j] == UINT32_MAX) break;
 				int ball_j = (objects[j] >> 1) & 65535;
 
-				//2¸öhome£¬Ö±½ÓÅö×²¼ì²â
+				//2ä¸ªhomeï¼Œç›´æ¥ç¢°æ’æ£€æµ‹
 				if (j < start + home_num)
 				{
 					if (JudgeCollision(balls[ball_i], balls[ball_j]))
@@ -617,7 +617,7 @@ __global__ void HandleCollisionCuda(uint32_t *cells, uint32_t *objects, Ball* ba
 					}
 				}
 
-				//homeºÍphantom£¬ĞèÒªÅĞÖØ
+				//homeå’Œphantomï¼Œéœ€è¦åˆ¤é‡
 				else
 				{
 					int home_i = (cells[i] >> 1) & ((1 << 24) - 1);
@@ -626,7 +626,7 @@ __global__ void HandleCollisionCuda(uint32_t *cells, uint32_t *objects, Ball* ba
 					int j_z = (balls[ball_j].CurrentPlace.z + ZRange) / GridSize;
 					int home_j = j_x << 16 | j_y << 8 | j_z;
 
-					//Ö»ÓĞÕâÑù²Å¿ÉÒÔ
+					//åªæœ‰è¿™æ ·æ‰å¯ä»¥
 					if(home_i < home_j)
 					{
 						if (JudgeCollision(balls[ball_i], balls[ball_j]))
@@ -645,9 +645,9 @@ __global__ void HandleCollisionCuda(uint32_t *cells, uint32_t *objects, Ball* ba
 }
 
 /*
-ÃèÊö£ºÅö×²¼ì²âºÍ´¦Àíº¯Êı
-²ÎÊı£ºcellºÍobjectÊı×é£¬ballÊı×é£¬ÇòºÍcellµÄ¸öÊı£¬indexÊı×éºÍ¸öÊı£¬Ïß³ÌĞÅÏ¢£¬³¡¾°µÄ¸÷ÖÖÏŞÖÆºÍ¸ñ×ÓĞÅÏ¢
-·µ»Ø£ºÎŞ£¬µ«ÊÇ½øĞĞÅö×²¼ì²âºÍ´¦Àí
+æè¿°ï¼šç¢°æ’æ£€æµ‹å’Œå¤„ç†å‡½æ•°
+å‚æ•°ï¼šcellå’Œobjectæ•°ç»„ï¼Œballæ•°ç»„ï¼Œçƒå’Œcellçš„ä¸ªæ•°ï¼Œindexæ•°ç»„å’Œä¸ªæ•°ï¼Œçº¿ç¨‹ä¿¡æ¯ï¼Œåœºæ™¯çš„å„ç§é™åˆ¶å’Œæ ¼å­ä¿¡æ¯
+è¿”å›ï¼šæ— ï¼Œä½†æ˜¯è¿›è¡Œç¢°æ’æ£€æµ‹å’Œå¤„ç†
 */
 void HandleCollision(uint32_t *cells, uint32_t *objects, Ball* balls, int num_balls, int num_cells,
 	uint32_t* indices, uint32_t num_indices, unsigned int num_blocks, unsigned int threads_per_block,
@@ -661,16 +661,16 @@ void HandleCollision(uint32_t *cells, uint32_t *objects, Ball* balls, int num_ba
 }
 
 /*
-ÃèÊö£º¿Õ¼ä»®·ÖËã·¨´¦ÀíÅö×²¼ì²âºÍËÙ¶È¸üĞÂ£¨Ö÷º¯Êı£©
-²ÎÊı£ºÇòÁĞ±í£¬X·¶Î§(-X,X),Z·¶Î§(-Z,Z),Y·¶Î§(0,Y)£¬¸ñ×Ó´óĞ¡£¬X¸ñ×Ó¸öÊı£¬Y¸ñ×Ó¸öÊı£¬Z¸ñ×Ó¸öÊı£¬N¸öÇò
-·µ»Ø£ºÎŞ£¬µ«ÊÇ¸üĞÂÇòÁĞ±í
+æè¿°ï¼šç©ºé—´åˆ’åˆ†ç®—æ³•å¤„ç†ç¢°æ’æ£€æµ‹å’Œé€Ÿåº¦æ›´æ–°ï¼ˆä¸»å‡½æ•°ï¼‰
+å‚æ•°ï¼šçƒåˆ—è¡¨ï¼ŒXèŒƒå›´(-X,X),ZèŒƒå›´(-Z,Z),YèŒƒå›´(0,Y)ï¼Œæ ¼å­å¤§å°ï¼ŒXæ ¼å­ä¸ªæ•°ï¼ŒYæ ¼å­ä¸ªæ•°ï¼ŒZæ ¼å­ä¸ªæ•°ï¼ŒNä¸ªçƒ
+è¿”å›ï¼šæ— ï¼Œä½†æ˜¯æ›´æ–°çƒåˆ—è¡¨
 */
 void HandleCollisionGrid(Ball* balls, float XRange, float ZRange, float Height, 
 	float GridSize, int GridX, int GridY, int GridZ, int N,
 	unsigned int num_blocks, unsigned int threads_per_block)
 {
 
-	//ÉêÇëÄÚ´æ
+	//ç”³è¯·å†…å­˜
 	unsigned int cell_size = N * 8 * sizeof(uint32_t);
 
 	uint32_t *cells_gpu;
@@ -693,13 +693,13 @@ void HandleCollisionGrid(Ball* balls, float XRange, float ZRange, float Height,
 
 
 	
-	//³õÊ¼»¯cellºÍobject
+	//åˆå§‹åŒ–cellå’Œobject
 	InitCells(cells_gpu, objects_gpu, balls, N,
 		XRange, ZRange, Height, GridSize, GridX, GridY, GridZ,
 		num_blocks, threads_per_block);
 
 
-	//»ùÊıÅÅĞò
+	//åŸºæ•°æ’åº
 	SortCells(cells_gpu, objects_gpu, cells_gpu_temp, objects_gpu_temp, radix_sums_gpu, 
 		8 * N, indices_gpu, indices_num_gpu, num_blocks, threads_per_block);
 	
@@ -724,14 +724,14 @@ void HandleCollisionGrid(Ball* balls, float XRange, float ZRange, float Height,
 
 
 /*
-ÃèÊö£ºGPUÅö×²¼ì²â+ÔË¶¯¸üĞÂÖ÷º¯Êı£¨¿Õ¼ä»®·ÖËã·¨£©
-²ÎÊı£ºÇòÁĞ±í£¬Ò»´ÎµÄÊ±¼ä£¬X·¶Î§(-X,X),Z·¶Î§(-Z,Z),Y·¶Î§(0,Y)£¬Ò»¸ö¸ñ×Ó´óĞ¡£¬X,Y,ZµÄ¸ñ×Ó¸öÊı£¬Çò¸öÊı
-·µ»Ø£ºÎŞ£¬µ«ÊÇ¸üĞÂÇòÁĞ±í
+æè¿°ï¼šGPUç¢°æ’æ£€æµ‹+è¿åŠ¨æ›´æ–°ä¸»å‡½æ•°ï¼ˆç©ºé—´åˆ’åˆ†ç®—æ³•ï¼‰
+å‚æ•°ï¼šçƒåˆ—è¡¨ï¼Œä¸€æ¬¡çš„æ—¶é—´ï¼ŒXèŒƒå›´(-X,X),ZèŒƒå›´(-Z,Z),YèŒƒå›´(0,Y)ï¼Œä¸€ä¸ªæ ¼å­å¤§å°ï¼ŒX,Y,Zçš„æ ¼å­ä¸ªæ•°ï¼Œçƒä¸ªæ•°
+è¿”å›ï¼šæ— ï¼Œä½†æ˜¯æ›´æ–°çƒåˆ—è¡¨
 */
 void UpdateBallsGridGPU(Ball* balls, float TimeOnce, float XRange, float ZRange, float Height, 
 	float GridSize, int GridX, int GridY, int GridZ, int N)
 {
-	//ÉèÖÃ£¬¼ÆËãĞèÒª¶àÉÙblockºÍthread
+	//è®¾ç½®ï¼Œè®¡ç®—éœ€è¦å¤šå°‘blockå’Œthread
 	unsigned int num_blocks = 128;
 	unsigned int threads_per_block = 512;
 	unsigned int object_size = (N - 1) / threads_per_block + 1;
@@ -744,22 +744,22 @@ void UpdateBallsGridGPU(Ball* balls, float TimeOnce, float XRange, float ZRange,
 	cudaMalloc((void**)&balls_gpu, nBytes);
 
 
-	// ³õÊ¼»¯Êı¾İ
+	// åˆå§‹åŒ–æ•°æ®
 	cudaMemcpy((void*)balls_gpu, (void*)balls, nBytes, cudaMemcpyHostToDevice);
 
-	// Ö´ĞĞkernel
+	// æ‰§è¡Œkernel
 	HandleCollisionGrid(balls_gpu, XRange, ZRange, Height, GridSize, GridX, GridY, GridZ, N, num_blocks, threads_per_block);
-	// Í¬²½device ±£Ö¤½á¹ûÄÜÕıÈ··ÃÎÊ
+	// åŒæ­¥device ä¿è¯ç»“æœèƒ½æ­£ç¡®è®¿é—®
 	cudaDeviceSynchronize();
 
-	// Ö´ĞĞkernel
+	// æ‰§è¡Œkernel
 	UpdateBallsMove << < num_blocks, threads_per_block>> > (balls_gpu, TimeOnce, XRange, ZRange, Height, N);
-	// Í¬²½device ±£Ö¤½á¹ûÄÜÕıÈ··ÃÎÊ
+	// åŒæ­¥device ä¿è¯ç»“æœèƒ½æ­£ç¡®è®¿é—®
 	cudaDeviceSynchronize();
 
-	// ¼ÇÂ¼½á¹û
+	// è®°å½•ç»“æœ
 	cudaMemcpy((void*)balls, (void*)balls_gpu, nBytes, cudaMemcpyDeviceToHost);
 
-	// ÊÍ·ÅÄÚ´æ
+	// é‡Šæ”¾å†…å­˜
 	cudaFree(balls_gpu);
 }
