@@ -14,9 +14,9 @@ using namespace std;
 
 //全局常量
 const int WindowSizeX = 800, WindowSizeY = 600, WindowPlaceX = 100, WindowPlaceY = 100;
-const char WindowName[] = "MyScene";
+const char WindowName[] = "collision detection";
 const float TimeOnce = 0.02; //刷新时间
-const int BallNum =4;
+const int BallNum = 5;
 const float XRange = 10, ZRange = 10, Height = 20, MaxRadius = 1; //场景的X,Y,Z范围（-X,X),(0,H),(-Z,Z)
 int GlobalMode = -1;
 
@@ -28,8 +28,6 @@ Light TheLight;
 Board Boards[6]; //边界
 
 BallList Balls;
-
-
 
 
 //初始化函数集合
@@ -274,6 +272,8 @@ void reshape(int w, int h)
 
 void InitSettings()
 {
+	GlobalMode = FAST_GPU;
+	/*
 	while (1)
 	{
 		int mode;
@@ -302,7 +302,6 @@ void InitSettings()
 			{
 				cout << "3：并行，空间划分碰撞检测" << endl;
 			}
-			GlobalMode = mode;
 			break;
 		}
 		else
@@ -310,6 +309,7 @@ void InitSettings()
 			printf("输入不合法，请重新输入！\n");
 		}
 	}
+	*/
 }
 
 int main(int argc, char** argv)
