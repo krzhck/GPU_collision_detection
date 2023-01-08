@@ -8,7 +8,7 @@
 #include"collision.cuh"
 using namespace std;
 
-class BallList
+class BallSet
 {
 public:
 	Ball* balls;
@@ -22,7 +22,7 @@ public:
 	float GridSize;
 	int GridX, GridY, GridZ;
 
-	BallList(float x, float y, float z, int num, float max_radius, float time_once)
+	BallSet(float x, float y, float z, int num, float max_radius, float time_once)
 	{
 		XRange = x;
 		ZRange = z;
@@ -40,7 +40,7 @@ public:
 
 	void InitBalls()
 	{
-		//小球的纹理，材质，颜色
+		//小球的纹理，材质，�?�色
 		GLfloat color[4] = { 0, 0, 0, 1 };
 		GLfloat ambient[4] = { 0.2, 0.4, 0.7, 1 };
 		GLfloat diffuse[4] = { 0.5, 0.5, 0.5, 1 };
@@ -64,12 +64,12 @@ public:
 					float place_x = diff_x * i + MaxRadius - XRange;
 					float place_z = diff_z * j + MaxRadius - ZRange;
 					float place_y = diff_y * k + MaxRadius;
-					Point pos(place_x, place_y, place_z);
+					Coord pos(place_x, place_y, place_z);
 					
 					float speed_x = ((rand() % 201) / 100.0f - 1.0f) * 10;
 					float speed_y = ((rand() % 201) / 100.0f - 1.0f) * 10;
 					float speed_z = ((rand() % 201) / 100.0f - 1.0f) * 10;
-					Point speed(speed_x, speed_y, speed_z);
+					Coord speed(speed_x, speed_y, speed_z);
 
 					float radius = ((rand() % 51) / 100.0f + 0.5f) * MaxRadius;
 					
@@ -85,19 +85,19 @@ public:
 		参数：无
 		返回：无
 	*/
-	void DrawBalls()
+	void RenderBalls()
 	{
 		for (int i = 0; i < NBalls; i++)
 		{
-			balls[i].DrawSelf();
+			balls[i].RenderBall();
 		}
 	}
 
 
-	//更新球的运动--主函数
+	//更新球的运动--主函�?
 	void UpdateBalls()
 	{
 		// CUDA collision detection
-		UpdateBallsGridGPU(balls, TimeOnce, XRange, ZRange, Height, GridSize, GridX, GridY, GridZ, NBalls);
+		CollisionDetection(balls, TimeOnce, XRange, ZRange, Height, GridSize, GridX, GridY, GridZ, NBalls);
 	}
 };

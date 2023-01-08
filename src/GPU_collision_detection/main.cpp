@@ -13,7 +13,7 @@ using namespace std;
 
 
 //全局常量
-const int WindowSizeX = 800, WindowSizeY = 600, WindowPlaceX = 100, WindowPlaceY = 100;
+const int WindowSizeX = 800, WindowSizeY = 600, WindowPosX = 100, WindowPosY = 100;
 const char WindowName[] = "collision detection";
 const float TimeOnce = 0.02; //刷新时间
 const int BallNum = 5;
@@ -24,9 +24,9 @@ Camera TheCamera(20.0f, 10.0f);
 Light TheLight;
 
 //物体
-Board Boards[6]; //边界
+Wall Walls[6]; //边界
 
-BallList Balls(XRange, Height, ZRange, BallNum, MaxRadius, TimeOnce);
+BallSet Balls(XRange, Height, ZRange, BallNum, MaxRadius, TimeOnce);
 
 
 //初始化函数集合
@@ -35,7 +35,7 @@ void InitWindow()
 {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowSize(WindowSizeX, WindowSizeY);
-	glutInitWindowPosition(WindowPlaceX, WindowPlaceY);
+	glutInitWindowPosition(WindowPosX, WindowPosY);
 	glutCreateWindow(WindowName);
 	const GLubyte* OpenGLVersion = glGetString(GL_VERSION);
 	const GLubyte* gluVersion = gluGetString(GLU_VERSION);
@@ -76,25 +76,25 @@ void InitLight()
 }
 
 //初始化边界和地板
-void InitBoards()
+void InitWalls()
 {
 	//8个点
-	Point DownA(-XRange, 0, -ZRange);
-	Point DownB(-XRange, 0, ZRange);
-	Point DownC(XRange, 0, -ZRange);
-	Point DownD(XRange, 0, ZRange);
-	Point UpA(-XRange, Height, -ZRange);
-	Point UpB(-XRange, Height, ZRange);
-	Point UpC(XRange, Height, -ZRange);
-	Point UpD(XRange, Height, ZRange);
+	Coord DownA(-XRange, 0, -ZRange);
+	Coord DownB(-XRange, 0, ZRange);
+	Coord DownC(XRange, 0, -ZRange);
+	Coord DownD(XRange, 0, ZRange);
+	Coord UpA(-XRange, Height, -ZRange);
+	Coord UpB(-XRange, Height, ZRange);
+	Coord UpC(XRange, Height, -ZRange);
+	Coord UpD(XRange, Height, ZRange);
 
 	//设置地板和挡板位置
-	Boards[0].InitPlace(DownA, DownB, DownD, DownC); // bottom
-	Boards[1].InitPlace(DownA, DownB, UpB, UpA);
-	Boards[3].InitPlace(DownC, DownD, UpD, UpC);
-	Boards[2].InitPlace(DownA, DownC, UpC, UpA);
-	Boards[4].InitPlace(DownB, DownD, UpD, UpB);
-	Boards[5].InitPlace(UpA, UpB, UpD, UpC); // top
+	Walls[0].InitPos(DownA, DownB, DownD, DownC); // bottom
+	Walls[1].InitPos(DownA, DownB, UpB, UpA);
+	Walls[3].InitPos(DownC, DownD, UpD, UpC);
+	Walls[2].InitPos(DownA, DownC, UpC, UpA);
+	Walls[4].InitPos(DownB, DownD, UpD, UpB);
+	Walls[5].InitPos(UpA, UpB, UpD, UpC); // top
 
 	GLfloat color_bottom[4] = { 1.0, 1.0, 1.0 , 1};
 	GLfloat ambient_bottom[4] = { 0.4, 0.4, 0.4 , 1};
@@ -103,7 +103,7 @@ void InitBoards()
 	GLfloat shininess_bottom = 20;
 
 	Shader shader_bottom(color_bottom, ambient_bottom, diffuse_bottom, specular_bottom, shininess_bottom);
-	Boards[0].InitColor(shader_bottom);
+	Walls[0].InitColor(shader_bottom);
 
 	//设置四周挡板材质
 	GLfloat color_border[3] = { 1.0, 1.0, 1.0 };
@@ -114,7 +114,7 @@ void InitBoards()
 	Shader shader_border(color_border, ambient_border, diffuse_border, specular_border, shininess_border);
 	for (int i = 1; i < 5; i++)
 	{
-		Boards[i].InitColor(shader_border);
+		Walls[i].InitColor(shader_border);
 	}
 }
 
@@ -126,7 +126,7 @@ void InitScene()
 {
 
 	InitLight();
-	InitBoards();
+	InitWalls();
 	Balls.InitBalls();
 }
 
@@ -135,28 +135,28 @@ void InitScene()
 void SetCamera()
 {
 	glLoadIdentity();
-	Point camera_place = TheCamera.CurrentPlace;//这就是视点的坐标  
-	Point camera_center = TheCamera.LookCenter;//这是视点中心坐标
-	gluLookAt(camera_place.x, camera_place.y, camera_place.z, camera_center.x, camera_center.y, camera_center.z, 0, 1, 0); //从视点看远点,y轴方向(0,1,0)是上方向  
+	Coord camera_Pos = TheCamera.Pos;//这就是视点的坐标  
+	Coord camera_center = TheCamera.LookCenter;//这是视点中心坐标
+	gluLookAt(camera_Pos.x, camera_Pos.y, camera_Pos.z, camera_center.x, camera_center.y, camera_center.z, 0, 1, 0); //从视点看远点,y轴方向(0,1,0)是上方向  
 }
 
 //绘制2边界和地板
-void DrawBoards()
+void RenderWalls()
 {
 	for (int i = 0; i < 3; i++)
 	{
-		glColor3f(Boards[i].WallShader.Color[0], Boards[i].WallShader.Color[1], Boards[i].WallShader.Color[2]);
-		glMaterialfv(GL_FRONT, GL_AMBIENT, Boards[i].WallShader.Ambient);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, Boards[i].WallShader.Diffuse);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, Boards[i].WallShader.Specular);
-		glMaterialfv(GL_FRONT, GL_SHININESS, Boards[i].WallShader.Shininess);
+		glColor3f(Walls[i].WallShader.Color[0], Walls[i].WallShader.Color[1], Walls[i].WallShader.Color[2]);
+		glMaterialfv(GL_FRONT, GL_AMBIENT, Walls[i].WallShader.Ambient);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, Walls[i].WallShader.Diffuse);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, Walls[i].WallShader.Specular);
+		glMaterialfv(GL_FRONT, GL_SHININESS, Walls[i].WallShader.Shininess);
 
 
 		glBegin(GL_POLYGON);
-		glVertex3f(Boards[i].PointList[0].x, Boards[i].PointList[0].y, Boards[i].PointList[0].z);
-		glVertex3f(Boards[i].PointList[1].x, Boards[i].PointList[1].y, Boards[i].PointList[1].z);
-		glVertex3f(Boards[i].PointList[2].x, Boards[i].PointList[2].y, Boards[i].PointList[2].z);
-		glVertex3f(Boards[i].PointList[3].x, Boards[i].PointList[3].y, Boards[i].PointList[3].z);
+		glVertex3f(Walls[i].Vertexes[0].x, Walls[i].Vertexes[0].y, Walls[i].Vertexes[0].z);
+		glVertex3f(Walls[i].Vertexes[1].x, Walls[i].Vertexes[1].y, Walls[i].Vertexes[1].z);
+		glVertex3f(Walls[i].Vertexes[2].x, Walls[i].Vertexes[2].y, Walls[i].Vertexes[2].z);
+		glVertex3f(Walls[i].Vertexes[3].x, Walls[i].Vertexes[3].y, Walls[i].Vertexes[3].z);
 		glEnd();
 		glFlush();
 	}
@@ -165,13 +165,13 @@ void DrawBoards()
 
 
 //绘制的主函数
-void DrawScene()
+void RenderScene()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	//清除颜色缓存
 	SetCamera();//设置相机
-	DrawBoards();//绘制地板和边框
+	RenderWalls();//绘制地板和边框
 	Balls.UpdateBalls();
-	Balls.DrawBalls();//更新和绘制小球
+	Balls.RenderBalls();//更新和绘制小球
 	glutSwapBuffers();
 }
 
@@ -262,7 +262,7 @@ int main(int argc, char** argv)
 	InitWindow();             //初始化窗口
 	InitScene();              //初始化场景
 	glutReshapeFunc(reshape); //绑定reshape函数
-	glutDisplayFunc(DrawScene); //绑定显示函数
+	glutDisplayFunc(RenderScene); //绑定显示函数
 	glutTimerFunc(20, OnTimer, 1);  //启动计时器
 	glutMouseFunc(OnMouseClick); //绑定鼠标点击函数
 	glutMotionFunc(OnMouseMove); //绑定鼠标移动函数

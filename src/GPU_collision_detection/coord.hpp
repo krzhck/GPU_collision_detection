@@ -5,27 +5,27 @@ using namespace std;
 
 #define PI 3.14159265
 
-// 3D坐标类
-class Point
+// 3D坐标�?
+class Coord
 {
 public:
 	float x;
 	float y;
 	float z;
-	Point()
+	Coord()
 	{
 		x = 0;
 		y = 0;
 		z = 0;
 	}
-	Point(float tx, float ty, float tz)
+	Coord(float tx, float ty, float tz)
 	{
 		x = tx;
 		y = ty;
 		z = tz;
 	}
 
-	Point(const Point& p)
+	Coord(const Coord& p)
 	{
 		x = p.x;
 		y = p.y;
@@ -38,39 +38,39 @@ public:
 		y = ty;
 		z = tz;
 	}
-	Point operator+(const Point& b)
+	Coord operator+(const Coord & b)
 	{
-		Point c;
+		Coord c;
 		c.x = x + b.x;
 		c.y = y + b.y;
 		c.z = z + b.z;
 		return c;
 	}
-	Point operator-(const Point& b)
+	Coord operator-(const Coord & b)
 	{
-		Point c;
+		Coord c;
 		c.x = x - b.x;
 		c.y = y - b.y;
 		c.z = z - b.z;
 		return c;
 	}
-	Point operator*(const float& b)
+	Coord operator*(const float & b)
 	{
-		Point c;
+		Coord c;
 		c.x = x * b;
 		c.y = y * b;
 		c.z = z * b;
 		return c;
 	}
-	Point operator/(const float& b)
+	Coord operator/(const float & b)
 	{
-		Point c;
+		Coord c;
 		c.x = x / b;
 		c.y = y / b;
 		c.z = z / b;
 		return c;
 	}
-	float operator*(const Point& b)
+	float operator*(const Coord & b)
 	{
 		float sum = 0;
 		sum += x * b.x;

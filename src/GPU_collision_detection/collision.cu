@@ -9,81 +9,81 @@ __device__ float Dist(float x, float y, float z)
 	return sqrt(x * x + y * y + z * z);
 }
 
-__device__ float Dist(Point& p)
+__device__ float Dist(Coord & p)
 {
 	return sqrt(p.x * p.x + p.y * p.y + p.z * p.z);
 }
 
-__device__ float Multiply(Point& a, Point& b)
+__device__ float Multiply(Coord & a, Coord& b)
 {
 	return (a.x * b.x + a.y * b.y + a.z * b.z);
 }
 
 /*
-	描述：处理与边界相撞
-	参数：X范围（-X, X), Z范围(-Z, Z), Y范围(0, Y)
+	描述：�?�理与边界相�?
+	参数：X范围�?-X, X), Z范围(-Z, Z), Y范围(0, Y)
 	返回：无
 */
-__device__ void HandleCollisionBoard(Ball& ball, float XRange, float ZRange, float Height)
+__device__ void HandleCollisionWall(Ball& ball, float XRange, float ZRange, float Height)
 {
-	if (ball.CurrentPlace.x - ball.Radius < -XRange)
+	if (ball.Pos.x - ball.Radius < -XRange)
 	{
-		ball.CurrentPlace.x = -XRange + ball.Radius;
-		ball.CurrentSpeed.x = -ball.CurrentSpeed.x;
+		ball.Pos.x = -XRange + ball.Radius;
+		ball.Speed.x = -ball.Speed.x;
 	}
-	else if (ball.CurrentPlace.x + ball.Radius > XRange)
+	else if (ball.Pos.x + ball.Radius > XRange)
 	{
-		ball.CurrentPlace.x = XRange - ball.Radius;
-		ball.CurrentSpeed.x = -ball.CurrentSpeed.x;
+		ball.Pos.x = XRange - ball.Radius;
+		ball.Speed.x = -ball.Speed.x;
 	}
-	if (ball.CurrentPlace.z - ball.Radius < -ZRange)
+	if (ball.Pos.z - ball.Radius < -ZRange)
 	{
-		ball.CurrentPlace.z = -ZRange + ball.Radius;
-		ball.CurrentSpeed.z = -ball.CurrentSpeed.z;
+		ball.Pos.z = -ZRange + ball.Radius;
+		ball.Speed.z = -ball.Speed.z;
 	}
-	else if (ball.CurrentPlace.z + ball.Radius > ZRange)
+	else if (ball.Pos.z + ball.Radius > ZRange)
 	{
-		ball.CurrentPlace.z = ZRange - ball.Radius;
-		ball.CurrentSpeed.z = -ball.CurrentSpeed.z;
+		ball.Pos.z = ZRange - ball.Radius;
+		ball.Speed.z = -ball.Speed.z;
 	}
-	if (ball.CurrentPlace.y - ball.Radius < 0)
+	if (ball.Pos.y - ball.Radius < 0)
 	{
-		ball.CurrentPlace.y = ball.Radius;
-		ball.CurrentSpeed.y = -ball.CurrentSpeed.y;
+		ball.Pos.y = ball.Radius;
+		ball.Speed.y = -ball.Speed.y;
 	}
-	else if (ball.CurrentPlace.y + ball.Radius > Height)
+	else if (ball.Pos.y + ball.Radius > Height)
 	{
-		ball.CurrentPlace.y = Height - ball.Radius;
-		ball.CurrentSpeed.y = -ball.CurrentSpeed.y;
+		ball.Pos.y = Height - ball.Radius;
+		ball.Speed.y = -ball.Speed.y;
 	}
 }
 
 
 /*
-	描述：处理小球自行运动和与边界碰撞
-	参数：单次运动时间，X范围（-X, X), Z范围(-Z, Z), Y范围(0, Y)
+	描述：�?�理小球�?行运动和与边界�?�撞
+	参数：单次运动时间，X范围�?-X, X), Z范围(-Z, Z), Y范围(0, Y)
 	返回：无
 */
 __device__ void BallMove(Ball& ball, float time, float XRange, float ZRange, float Height)
 {
 
-	ball.CurrentPlace.x = ball.CurrentPlace.x + ball.CurrentSpeed.x * time;
-	ball.CurrentPlace.y = ball.CurrentPlace.y + ball.CurrentSpeed.y * time;
-	ball.CurrentPlace.z = ball.CurrentPlace.z + ball.CurrentSpeed.z * time;
-	HandleCollisionBoard(ball, XRange, ZRange, Height);
+	ball.Pos.x = ball.Pos.x + ball.Speed.x * time;
+	ball.Pos.y = ball.Pos.y + ball.Speed.y * time;
+	ball.Pos.z = ball.Pos.z + ball.Speed.z * time;
+	HandleCollisionWall(ball, XRange, ZRange, Height);
 }
 
 /*
-	描述：判断两个球是否相撞
+	描述：判�?两个球是否相�?
 	参数：球a，球b
 	返回：是1，否0
 */
 __device__ bool JudgeCollision(Ball& a, Ball& b)
 {
 	float dist = 0;
-	float dist_x = a.CurrentPlace.x - b.CurrentPlace.x;
-	float dist_y = a.CurrentPlace.y - b.CurrentPlace.y;
-	float dist_z = a.CurrentPlace.z - b.CurrentPlace.z;
+	float dist_x = a.Pos.x - b.Pos.x;
+	float dist_y = a.Pos.y - b.Pos.y;
+	float dist_z = a.Pos.z - b.Pos.z;
 	dist = Dist(dist_x, dist_y, dist_z);
 	if (dist < a.Radius + b.Radius)
 	{
@@ -102,34 +102,34 @@ __device__ bool JudgeCollision(Ball& a, Ball& b)
 */
 __device__ void ChangeSpeed(Ball& a, Ball& b)
 {
-	//径向速度按照质量做变换，法向速度不变
+	//径向速度按照质量做变�?，法向速度不变
 	float dist = 0;
-	float diff_x = b.CurrentPlace.x - a.CurrentPlace.x;
-	float diff_y = b.CurrentPlace.y - a.CurrentPlace.y;
-	float diff_z = b.CurrentPlace.z - a.CurrentPlace.z;
+	float diff_x = b.Pos.x - a.Pos.x;
+	float diff_y = b.Pos.y - a.Pos.y;
+	float diff_z = b.Pos.z - a.Pos.z;
 	dist = Dist(diff_x, diff_y, diff_z);
 
 	//求径向，法向速度
-	float rate_collide_a = (a.CurrentSpeed.x * diff_x + a.CurrentSpeed.y * diff_y + a.CurrentSpeed.z * diff_z) / dist / dist;
+	float rate_collide_a = (a.Speed.x * diff_x + a.Speed.y * diff_y + a.Speed.z * diff_z) / dist / dist;
 	float speed_collide_a_x = diff_x * rate_collide_a;
 	float speed_collide_a_y = diff_y * rate_collide_a;
 	float speed_collide_a_z = diff_z * rate_collide_a;
 
-	float rate_collide_b = (b.CurrentSpeed.x * diff_x + b.CurrentSpeed.y * diff_y + b.CurrentSpeed.z * diff_z) / dist / dist;
+	float rate_collide_b = (b.Speed.x * diff_x + b.Speed.y * diff_y + b.Speed.z * diff_z) / dist / dist;
 	float speed_collide_b_x = diff_x * rate_collide_b;
 	float speed_collide_b_y = diff_y * rate_collide_b;
 	float speed_collide_b_z = diff_z * rate_collide_b;
 
-	float unchanged_a_x = a.CurrentSpeed.x - speed_collide_a_x;
-	float unchanged_a_y = a.CurrentSpeed.y - speed_collide_a_y;
-	float unchanged_a_z = a.CurrentSpeed.z - speed_collide_a_z;
+	float unchanged_a_x = a.Speed.x - speed_collide_a_x;
+	float unchanged_a_y = a.Speed.y - speed_collide_a_y;
+	float unchanged_a_z = a.Speed.z - speed_collide_a_z;
 
-	float unchanged_b_x = b.CurrentSpeed.x - speed_collide_b_x;
-	float unchanged_b_y = b.CurrentSpeed.y - speed_collide_b_y;
-	float unchanged_b_z = b.CurrentSpeed.z - speed_collide_b_z;
+	float unchanged_b_x = b.Speed.x - speed_collide_b_x;
+	float unchanged_b_y = b.Speed.y - speed_collide_b_y;
+	float unchanged_b_z = b.Speed.z - speed_collide_b_z;
 
 
-	//假设b不动，a撞b，更新两者径向速度
+	//假�?�b不动，a撞b，更新两者径向速度
 	float speed_collide_new_a_x = (speed_collide_a_x * (a.Weight - b.Weight) + speed_collide_b_x * (2 * b.Weight)) / (a.Weight + b.Weight);
 	float speed_collide_new_a_y = (speed_collide_a_y * (a.Weight - b.Weight) + speed_collide_b_y * (2 * b.Weight)) / (a.Weight + b.Weight);
 	float speed_collide_new_a_z = (speed_collide_a_z * (a.Weight - b.Weight) + speed_collide_b_z * (2 * b.Weight)) / (a.Weight + b.Weight);
@@ -138,19 +138,19 @@ __device__ void ChangeSpeed(Ball& a, Ball& b)
 	float speed_collide_new_b_y = (speed_collide_a_y * (2 * a.Weight) + speed_collide_b_y * (b.Weight - a.Weight)) / (a.Weight + b.Weight);
 	float speed_collide_new_b_z = (speed_collide_a_z * (2 * a.Weight) + speed_collide_b_z * (b.Weight - a.Weight)) / (a.Weight + b.Weight);
 
-	a.CurrentSpeed.x = speed_collide_new_a_x + unchanged_a_x;
-	a.CurrentSpeed.y = speed_collide_new_a_y + unchanged_a_y;
-	a.CurrentSpeed.z = speed_collide_new_a_z + unchanged_a_z;
+	a.Speed.x = speed_collide_new_a_x + unchanged_a_x;
+	a.Speed.y = speed_collide_new_a_y + unchanged_a_y;
+	a.Speed.z = speed_collide_new_a_z + unchanged_a_z;
 
-	b.CurrentSpeed.x = speed_collide_new_b_x + unchanged_b_x;
-	b.CurrentSpeed.y = speed_collide_new_b_y + unchanged_b_y;
-	b.CurrentSpeed.z = speed_collide_new_b_z + unchanged_b_z;
+	b.Speed.x = speed_collide_new_b_x + unchanged_b_x;
+	b.Speed.y = speed_collide_new_b_y + unchanged_b_y;
+	b.Speed.z = speed_collide_new_b_z + unchanged_b_z;
 }
 
 /*
-描述：在球之间的碰撞检测完成后，处理球的运动以及和边界的碰撞（并行）
-参数：球列表，一次的时间，X范围(-X,X),Z范围(-Z,Z),Y范围(0,Y)，球个数
-返回：无，但是更新球列表
+描述：在球之间的碰撞检测完成后，�?�理球的运动以及和边界的碰撞（并行）
+参数：球列表，一次的时间，X范围(-X,X),Z范围(-Z,Z),Y范围(0,Y)，球�?�?
+返回：无，但�?更新球列�?
 */
 __global__ void UpdateBallsMove(Ball* balls, float TimeOnce, float XRange, float ZRange, float Height, int N)
 {
@@ -168,8 +168,8 @@ __global__ void UpdateBallsMove(Ball* balls, float TimeOnce, float XRange, float
 
 //空间划分算法相关函数
 /*
-描述：初始化cells，objects数组，前者记录物体所在的格子信息（格子x，y，z的id，home还是phantom），后者记录物体id和home/phantom
-参数：空的cell，phantom；球列表和个数，还有各种格子信息
+描述：初始化cells，objects数组，前者�?�录物体所在的格子信息（格子x，y，z的id，home还是phantom），后者�?�录物体id和home/phantom
+参数：空的cell，phantom；球列表和个数，还有各�?�格子信�?
 返回：更新cells，objects数组和cell_num
 */
 __global__ void InitCellKernel(uint32_t *cells, uint32_t *objects, Ball* balls, int N, float XRange, float ZRange, float Height, float GridSize, int GridX, int GridY, int GridZ) 
@@ -178,13 +178,13 @@ __global__ void InitCellKernel(uint32_t *cells, uint32_t *objects, Ball* balls, 
 
 	for (int i = blockIdx.x * blockDim.x + threadIdx.x; i < N; i += gridDim.x * blockDim.x)
 	{
-		int current_cell_id = i * 8; //每个球最多在8个格子内
+		int current_cell_id = i * 8; //每个球最多在8�?格子�?
 		int cell_info = 0;
 		int object_info = 0;
 		int current_count = 0;
-		float x = balls[i].CurrentPlace.x;
-		float y = balls[i].CurrentPlace.y;
-		float z = balls[i].CurrentPlace.z;
+		float x = balls[i].Pos.x;
+		float y = balls[i].Pos.y;
+		float z = balls[i].Pos.z;
 		float radius = balls[i].Radius;
 
 		//找到home cell
@@ -210,7 +210,7 @@ __global__ void InitCellKernel(uint32_t *cells, uint32_t *objects, Ball* balls, 
 					int new_hash_y = hash_y + dy;
 					int new_hash_z = hash_z + dz;
 
-					//自己不考虑
+					//�?己不考虑
 					if (dx == 0 && dy == 0 && dz == 0)
 					{
 						continue;
@@ -301,9 +301,9 @@ __global__ void InitCellKernel(uint32_t *cells, uint32_t *objects, Ball* balls, 
 
 
 /*
-描述：计算前i和的算法
-参数：原始数组，个数n
-返回：原始数组变成前i个和数组
+描述：�?�算前i和的算法
+参数：原始数组，�?数n
+返回：原始数组变成前i�?和数�?
 */
 __device__ void PrefixSum(uint32_t *values, unsigned int n) 
 {
@@ -347,76 +347,75 @@ __device__ void PrefixSum(uint32_t *values, unsigned int n)
 }
 
 /*
-描述：对cells求前缀和
+描述：�?�cells求前缀�?
 参数：cells，待更新前缀和，N个cell，偏移量
-返回：更新前缀和
+返回：更新前缀�?
 */
 __global__ void GetRadixSum(uint32_t *cells, uint32_t *radix_sums, int N, int shift)
- {
-	 int index = threadIdx.x + blockIdx.x * blockDim.x;
-	 int stride = blockDim.x * gridDim.x;
-	 int num_indices = 1 << RADIX_LENGTH;
+{
+	int index = threadIdx.x + blockIdx.x * blockDim.x;
+	int stride = blockDim.x * gridDim.x;
+	int num_indices = 1 << RADIX_LENGTH;
 
 
-	 //初始化
-	 for (int i = index; i < num_indices; i++)
-	 {
-		 radix_sums[i] = 0;
-	 }
-	 __syncthreads();
+	//初�?�化
+	for (int i = index; i < num_indices; i++)
+	{
+		radix_sums[i] = 0;
+	}
+	__syncthreads();
 
 
 	 //求和
-	 for (int i = index; i < N; i += stride)
-	 {
-		 //非常重要，不这样做无法有效求和
-		 for (int j = 0; j < blockDim.x; j++)
-		 {
-			 if (threadIdx.x % blockDim.x == j)
-			 {
-				 int current_radix_num = (cells[i] >> shift) & (num_indices - 1);
-				 radix_sums[current_radix_num] ++;
-			 }
-		 }
+	for (int i = index; i < N; i += stride)
+	{
+		//非常重�?�，不这样做无法有效求和
+		for (int j = 0; j < blockDim.x; j++)
+		{
+			if (threadIdx.x % blockDim.x == j)
+			{
+				int current_radix_num = (cells[i] >> shift) & (num_indices - 1);
+				radix_sums[current_radix_num] ++;
+			}
+		}
 
-	 }
-	 __syncthreads();
-	 //求前缀和
-	 PrefixSum(radix_sums, num_indices);
-	 __syncthreads();
+	}
+	__syncthreads();
+	//求前缀�?
+	PrefixSum(radix_sums, num_indices);
+	__syncthreads();
 }
 
- /*
- 描述：重新分配元素
- 参数：cells，object数组，他们待更新的分配结果temp，前缀和数组，N个元素，偏移量，每个线程处理几个cell
- 返回：更新前缀和
- */
-__global__ void RearrangeCell(uint32_t *cells, uint32_t *objects, uint32_t *cells_temp, uint32_t *objects_temp, 
-	 uint32_t *radix_sums, int N, int shift)
- {
-	 int index = threadIdx.x + blockIdx.x * blockDim.x;
-	 int num_radices = 1 << RADIX_LENGTH;
+/*
+描述：重新分配元�?
+参数：cells，object数组，他�?待更新的分配结果temp，前缀和数组，N�?元素，偏移量，每�?线程处理几个cell
+返回：更新前缀�?
+*/
+__global__ void RearrangeCell(uint32_t *cells, uint32_t *objects, uint32_t *cells_temp, uint32_t *objects_temp, uint32_t *radix_sums, int N, int shift)
+{
+	int index = threadIdx.x + blockIdx.x * blockDim.x;
+	int num_radices = 1 << RADIX_LENGTH;
 
-	 if (index != 0) return;
-	 //分配
-	 for (int i = 0; i < N; i ++ )
-	 {
+	if (index != 0) return;
+	//分配
+	for (int i = 0; i < N; i ++ )
+	{
 		int current_radix_num = (cells[i] >> shift) & (num_radices - 1);
 		cells_temp[radix_sums[current_radix_num]] = cells[i];
 		objects_temp[radix_sums[current_radix_num]] = objects[i];
 		radix_sums[current_radix_num] ++;
-	 }
- }
+	}
+}
 
 /*
-描述：获取排序后数组的index（cell变化的位置）
-参数：cell，cell个数N,待更新的indice，待更新的indice个数
-返回：无，但是更新indice数组和indice个数
+描述：获取排序后数组的index（cell变化的位�?�?
+参数：cell，cell�?数N,待更新的indice，待更新的indice�?�?
+返回：无，但�?更新indice数组和indice�?�?
 */
 __global__ void GetCellIndex(uint32_t *cells, int N, uint32_t* indices, uint32_t* num_indices)
 {
 	int index = threadIdx.x + blockIdx.x * blockDim.x;
-	//只能串行
+	//�?能串�?
 	if (index != 0) return;
 	num_indices[0] = 0;
 	uint32_t mask = (1 << 24) - 1;
@@ -442,9 +441,9 @@ __global__ void GetCellIndex(uint32_t *cells, int N, uint32_t* indices, uint32_t
 
 
 /*
-描述：对cell，object做基数排序，并且获取index（cell变化的位置）
-参数：cell，object数组；他们的temp形式用于排序；待求的前缀和数组；cell个数；待求的index数组和长度；线程情况
-返回：无，但是更新cell，object数组，还有index数组和其长度
+描述：�?�cell，object做基数排序，并且获取index（cell变化的位�?�?
+参数：cell，object数组；他�?的temp形式用于排序；待求的前缀和数组；cell�?数；待求的index数组和长度；线程情况
+返回：无，但�?更新cell，object数组，还有index数组和其长度
 */
 void SortCells(uint32_t *cells, uint32_t *objects, uint32_t *cells_temp, uint32_t *objects_temp,
 	uint32_t *radix_sums, int N, uint32_t* indices, uint32_t* num_indices,
@@ -454,14 +453,14 @@ void SortCells(uint32_t *cells, uint32_t *objects, uint32_t *cells_temp, uint32_
 	uint32_t *objects_swap;
 	for (int i = 0; i < 32; i += RADIX_LENGTH)
 	{
-		//求前缀和
+		//求前缀�?
 		GetRadixSum <<< num_blocks, threads_per_block >>> (cells, radix_sums, N, i);
 
-		//用前缀和重新分配
+		//用前缀和重新分�?
 		RearrangeCell <<< num_blocks, threads_per_block >>> (cells, objects, cells_temp, objects_temp,
 			radix_sums, N, i);
 		
-		//交换原始和temp
+		//交换原�?�和temp
 		cells_swap = cells;
 		cells = cells_temp;
 		cells_temp = cells_swap;
@@ -474,8 +473,8 @@ void SortCells(uint32_t *cells, uint32_t *objects, uint32_t *cells_temp, uint32_
 
 /*
 描述：cuda碰撞检测和处理函数
-参数：cell和object数组，ball数组，球和cell的个数，index数组和个数，线程信息，场景的各种限制和格子信息
-返回：无，但是进行碰撞检测和处理
+参数：cell和object数组，ball数组，球和cell的个数，index数组和个数，线程信息，场�?的各种限制和格子信息
+返回：无，但�?进�?��?�撞检测和处理
 */
 __global__ void HandleCollisionCuda(uint32_t *cells, uint32_t *objects, Ball* balls, int num_balls, int num_cells,
 	uint32_t* indices, uint32_t num_indices, unsigned int group_per_thread,
@@ -484,7 +483,7 @@ __global__ void HandleCollisionCuda(uint32_t *cells, uint32_t *objects, Ball* ba
 	int index = threadIdx.x + blockIdx.x * blockDim.x;
 	for (int group_num = 0; group_num < group_per_thread; group_num++)
 	{
-		//判断是否越界，找到处理的start，end
+		//判断�?否越界，找到处理的start，end
 		int cell_id = index * group_per_thread + group_num;
 		if (cell_id >= num_indices)
 		{
@@ -501,7 +500,7 @@ __global__ void HandleCollisionCuda(uint32_t *cells, uint32_t *objects, Ball* ba
 			start = indices[cell_id - 1];
 		}
 
-		//找其中home的个数
+		//找其中home的个�?
 		int home_num = 0;
 		for (int i = start; i < end; i++)
 		{
@@ -516,7 +515,7 @@ __global__ void HandleCollisionCuda(uint32_t *cells, uint32_t *objects, Ball* ba
 			}
 		}
 
-		//遍历碰撞检测
+		//遍历碰撞检�?
 		for (int i = start; i < start + home_num; i++)
 		{
 			if (cells[i] == UINT32_MAX) break;
@@ -527,7 +526,7 @@ __global__ void HandleCollisionCuda(uint32_t *cells, uint32_t *objects, Ball* ba
 				if (cells[j] == UINT32_MAX) break;
 				int ball_j = (objects[j] >> 1) & 65535;
 
-				//2个home，直接碰撞检测
+				//2个home，直接�?�撞检�?
 				if (j < start + home_num)
 				{
 					if (JudgeCollision(balls[ball_i], balls[ball_j]))
@@ -536,16 +535,16 @@ __global__ void HandleCollisionCuda(uint32_t *cells, uint32_t *objects, Ball* ba
 					}
 				}
 
-				//home和phantom，需要判重
+				//home和phantom，需要判�?
 				else
 				{
 					int home_i = (cells[i] >> 1) & ((1 << 24) - 1);
-					int j_x = (balls[ball_j].CurrentPlace.x + XRange) / GridSize;
-					int j_y = balls[ball_j].CurrentPlace.y / GridSize;
-					int j_z = (balls[ball_j].CurrentPlace.z + ZRange) / GridSize;
+					int j_x = (balls[ball_j].Pos.x + XRange) / GridSize;
+					int j_y = balls[ball_j].Pos.y / GridSize;
+					int j_z = (balls[ball_j].Pos.z + ZRange) / GridSize;
 					int home_j = j_x << 16 | j_y << 8 | j_z;
 
-					//只有这样才可以
+					//�?有这样才�?�?
 					if(home_i < home_j)
 					{
 						if (JudgeCollision(balls[ball_i], balls[ball_j]))
@@ -564,9 +563,9 @@ __global__ void HandleCollisionCuda(uint32_t *cells, uint32_t *objects, Ball* ba
 }
 
 /*
-描述：碰撞检测和处理函数
-参数：cell和object数组，ball数组，球和cell的个数，index数组和个数，线程信息，场景的各种限制和格子信息
-返回：无，但是进行碰撞检测和处理
+描述：�?�撞检测和处理函数
+参数：cell和object数组，ball数组，球和cell的个数，index数组和个数，线程信息，场�?的各种限制和格子信息
+返回：无，但�?进�?��?�撞检测和处理
 */
 void HandleCollision(uint32_t *cells, uint32_t *objects, Ball* balls, int num_balls, int num_cells,
 	uint32_t* indices, uint32_t num_indices, unsigned int num_blocks, unsigned int threads_per_block,
@@ -580,16 +579,16 @@ void HandleCollision(uint32_t *cells, uint32_t *objects, Ball* balls, int num_ba
 }
 
 /*
-描述：空间划分算法处理碰撞检测和速度更新（主函数）
-参数：球列表，X范围(-X,X),Z范围(-Z,Z),Y范围(0,Y)，格子大小，X格子个数，Y格子个数，Z格子个数，N个球
-返回：无，但是更新球列表
+描述：空间划分算法�?�理碰撞检测和速度更新（主函数�?
+参数：球列表，X范围(-X,X),Z范围(-Z,Z),Y范围(0,Y)，格子大小，X格子�?数，Y格子�?数，Z格子�?数，N�?�?
+返回：无，但�?更新球列�?
 */
 void HandleCollisionGrid(Ball* balls, float XRange, float ZRange, float Height, 
 	float GridSize, int GridX, int GridY, int GridZ, int N,
 	unsigned int num_blocks, unsigned int threads_per_block)
 {
 
-	//申请内存
+	//申�?�内�?
 	unsigned int cell_size = N * 8 * sizeof(uint32_t);
 
 	uint32_t *cells_gpu;
@@ -612,7 +611,7 @@ void HandleCollisionGrid(Ball* balls, float XRange, float ZRange, float Height,
 
 
 	
-	//初始化cell和object
+	//初�?�化cell和object
 	InitCellKernel <<< num_blocks, threads_per_block, threads_per_block * sizeof(unsigned int) >>> (cells_gpu, objects_gpu, balls, N, XRange, ZRange, Height, GridSize, GridX, GridY, GridZ);
 
 	//基数排序
@@ -640,14 +639,14 @@ void HandleCollisionGrid(Ball* balls, float XRange, float ZRange, float Height,
 
 
 /*
-描述：GPU碰撞检测+运动更新主函数（空间划分算法）
-参数：球列表，一次的时间，X范围(-X,X),Z范围(-Z,Z),Y范围(0,Y)，一个格子大小，X,Y,Z的格子个数，球个数
-返回：无，但是更新球列表
+描述：GPU碰撞检�?+运动更新主函数（空间划分算法�?
+参数：球列表，一次的时间，X范围(-X,X),Z范围(-Z,Z),Y范围(0,Y)，一�?格子大小，X,Y,Z的格子个数，球个�?
+返回：无，但�?更新球列�?
 */
-void UpdateBallsGridGPU(Ball* balls, float TimeOnce, float XRange, float ZRange, float Height, 
+void CollisionDetection(Ball* balls, float TimeOnce, float XRange, float ZRange, float Height, 
 	float GridSize, int GridX, int GridY, int GridZ, int N)
 {
-	//设置，计算需要多少block和thread
+	//设置，�?�算需要�?�少block和thread
 	unsigned int num_blocks = 128;
 	unsigned int threads_per_block = 512;
 	unsigned int object_size = (N - 1) / threads_per_block + 1;
@@ -660,17 +659,17 @@ void UpdateBallsGridGPU(Ball* balls, float TimeOnce, float XRange, float ZRange,
 	cudaMalloc((void**)&balls_gpu, nBytes);
 
 
-	// 初始化数据
+	// 初�?�化数据
 	cudaMemcpy((void*)balls_gpu, (void*)balls, nBytes, cudaMemcpyHostToDevice);
 
-	// 执行kernel
+	// 执�?�kernel
 	HandleCollisionGrid(balls_gpu, XRange, ZRange, Height, GridSize, GridX, GridY, GridZ, N, num_blocks, threads_per_block);
-	// 同步device 保证结果能正确访问
+	// 同�??device 保证结果能�?�确访问
 	cudaDeviceSynchronize();
 
-	// 执行kernel
+	// 执�?�kernel
 	UpdateBallsMove <<< num_blocks, threads_per_block >>> (balls_gpu, TimeOnce, XRange, ZRange, Height, N);
-	// 同步device 保证结果能正确访问
+	// 同�??device 保证结果能�?�确访问
 	cudaDeviceSynchronize();
 
 	// 记录结果
