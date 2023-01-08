@@ -32,7 +32,7 @@ public:
 		z = p.z;
 	}
 
-	void SetPlace(float tx, float ty, float tz)
+	void SetPos(float tx, float ty, float tz)
 	{
 		x = tx;
 		y = ty;

@@ -15,7 +15,7 @@ public:
 
 
 	Wall(){}
-	void InitPlace(Coord a, Coord b, Coord c, Coord d)
+	void InitPos(Coord a, Coord b, Coord c, Coord d)
 	{
 		Vertexes[0] = a;
 		Vertexes[1] = b;
@@ -49,7 +49,7 @@ public:
 			nb = -nb;
 			nc = -nc;
 		}
-		Normal.SetPlace(na, nb, nc);
+		Normal.SetPos(na, nb, nc);
 		
 	}
 
