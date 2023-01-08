@@ -16,7 +16,7 @@ public:
 	float ZRange;
 	float Height;
 	int Cols;
-	int NBalls;
+	int NBalls; // number of balls == Cols ^ 3
 	float MaxRadius;
 	float RefreshInterval;
 	float GridSize;
@@ -38,9 +38,9 @@ public:
 		GridZ = ceil(ZRange * 2 / GridSize);
 	}
 
+	// set surface, position, speed, size
 	void InitBalls()
 	{
-		//小球的纹理，材质，�?�色
 		GLfloat color[4] = { 0, 0, 0, 1 };
 		GLfloat ambient[4] = { 0.2, 0.4, 0.7, 1 };
 		GLfloat diffuse[4] = { 0.5, 0.5, 0.5, 1 };
@@ -80,11 +80,6 @@ public:
 		}
 	}
 
-	/*
-		描述：绘制所有球
-		参数：无
-		返回：无
-	*/
 	void RenderBalls()
 	{
 		for (int i = 0; i < NBalls; i++)
@@ -93,8 +88,7 @@ public:
 		}
 	}
 
-
-	//更新球的运动--主函�?
+	// update balls movement
 	void UpdateBalls()
 	{
 		// CUDA collision detection

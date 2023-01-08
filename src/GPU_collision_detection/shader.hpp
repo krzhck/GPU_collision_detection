@@ -3,15 +3,15 @@
 
 using namespace std;
 
-
+// class for OpenGL rendering info
 class Shader
 {
 public:
-	GLfloat Color[4] = { 0, 0, 0, 0 }; //颜色
-	GLfloat Ambient[4] = { 0, 0, 0, 0 }; //环境光
-	GLfloat Diffuse[4] = { 0, 0, 0, 0 }; //漫反射
-	GLfloat Specular[4] = { 0, 0, 0, 0 }; //镜面反射
-	GLfloat Shininess[1] = { 0 }; //镜面指数
+	GLfloat Color[4] = { 0 };
+	GLfloat Ambient[4] = { 0 };
+	GLfloat Diffuse[4] = { 0 };
+	GLfloat Specular[4] = { 0 };
+	GLfloat Shininess[1] = { 0 };
 
 	Shader() {}
 

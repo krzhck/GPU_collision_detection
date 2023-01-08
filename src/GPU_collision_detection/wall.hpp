@@ -8,9 +8,7 @@ class Wall
 {
 public:
 	Coord Vertexes[4];
-	Coord Normal;
-	//材质，纹理，颜色信息
-
+	Coord Normal; // normal vector
 	Shader WallShader;
 
 
@@ -24,8 +22,6 @@ public:
 		GetNorm();
 	}
 
-
-	//求平面法向量(方向指向外侧�?
 	void GetNorm()
 	{
 		Coord v1 = Vertexes[0];
@@ -48,7 +44,7 @@ public:
 		
 	}
 
-	//求点到平面距�?
+	// distance between point p and wall
 	float GetDist(Coord p)
 	{
 		GetNorm();

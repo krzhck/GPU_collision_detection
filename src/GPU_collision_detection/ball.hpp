@@ -11,17 +11,16 @@ using namespace std;
 class Ball
 {
 public:
-	//位置，速度信息
 	Coord Pos;
 	float Radius;
 	Coord Speed;
 	float Weight;
 	
-	Shader BallShader;
+	Shader BallShader; // surface info
 
 	Ball(){}
 
-	//初�?�化位置，速度信息
+	// init position, speed, surface
 	void Init(Coord pos, Coord speed, float radius, Shader shader)
 	{
 		Pos = pos;
@@ -32,17 +31,16 @@ public:
 		BallShader = shader;
 	}
 
-	//绘制一�?小球
 	void RenderBall()
 	{
-		//设置纹理，材质等信息
+		// set surface info
 		glColor3f(BallShader.Color[0], BallShader.Color[1], BallShader.Color[2]);
 		glMaterialfv(GL_FRONT, GL_AMBIENT, BallShader.Ambient);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, BallShader.Diffuse);
 		glMaterialfv(GL_FRONT, GL_SPECULAR, BallShader.Specular);
 		glMaterialfv(GL_FRONT, GL_SHININESS, BallShader.Shininess);
 
-		//平移到坐标原点，绘制，恢复坐�?
+		// render and reposition
 		glPushMatrix();
 		glTranslatef(Pos.x, Pos.y, Pos.z);
 		glutSolidSphere(Radius, BALL_SLICE, BALL_SLICE);

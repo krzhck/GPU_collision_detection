@@ -5,7 +5,7 @@ using namespace std;
 
 #define PI 3.14159265
 
-// 3D坐标�?
+// class for 3D coordinate
 class Coord
 {
 public:
