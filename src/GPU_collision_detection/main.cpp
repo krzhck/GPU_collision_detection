@@ -26,7 +26,7 @@ Light TheLight;
 //物体
 Board Boards[6]; //边界
 
-BallList Balls;
+BallList Balls(XRange, Height, ZRange, BallNum, MaxRadius, TimeOnce);
 
 
 //初始化函数集合
@@ -131,7 +131,6 @@ void InitScene()
 
 	InitLight();
 	InitBoards();
-	Balls.Init(XRange, Height, ZRange, BallNum, MaxRadius, TimeOnce);
 	Balls.InitBalls();
 }
 

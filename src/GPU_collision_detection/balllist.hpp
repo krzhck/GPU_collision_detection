@@ -12,7 +12,6 @@ class BallList
 {
 public:
 	Ball* balls;
-	BallList() {}
 	float XRange;
 	float ZRange;
 	float Height;
@@ -23,12 +22,7 @@ public:
 	float GridSize;
 	int GridX, GridY, GridZ;
 
-
-	/*
-	描述：初始化位置信息
-	参数：x范围（实际是-x到x），y范围（0到y），z范围（-z到z），每个轴上球个数（实际num的立方个球），球最大半径，模式
-	*/
-	void Init(float x, float y, float z, int num, float max_radius, float time_once)
+	BallList(float x, float y, float z, int num, float max_radius, float time_once)
 	{
 		XRange = x;
 		ZRange = z;
@@ -42,7 +36,6 @@ public:
 		GridX = ceil(XRange * 2 / GridSize);
 		GridY = ceil(Height / GridSize);
 		GridZ = ceil(ZRange * 2 / GridSize);
-
 	}
 
 	void InitBalls()
