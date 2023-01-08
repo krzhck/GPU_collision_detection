@@ -15,22 +15,22 @@ public:
 	float XRange;
 	float ZRange;
 	float Height;
-	int Num;
+	int Cols;
 	int NBalls;
 	float MaxRadius;
-	float TimeOnce;
+	float RefreshInterval;
 	float GridSize;
 	int GridX, GridY, GridZ;
 
-	BallSet(float x, float y, float z, int num, float max_radius, float time_once)
+	BallSet(float x, float y, float z, int cols, float max_radius, float refresh_interval)
 	{
 		XRange = x;
 		ZRange = z;
 		Height = y;
-		Num = num;
+		Cols = cols;
 		MaxRadius = max_radius;
-		TimeOnce = time_once;
-		NBalls = num * num * num;
+		RefreshInterval = refresh_interval;
+		NBalls = cols * cols * cols;
 		balls = new Ball[NBalls];
 		GridSize = max_radius * 1.5;
 		GridX = ceil(XRange * 2 / GridSize);
@@ -49,17 +49,17 @@ public:
 
 		Shader shader(color, ambient, diffuse, specular, shininess);
 
-		float diff_x = (2 * XRange - 2 * MaxRadius) / (Num - 1);
-		float diff_z = (2 * ZRange - 2 * MaxRadius) / (Num - 1);
-		float diff_y = (Height - 2 * MaxRadius) / (Num - 1);
+		float diff_x = (2 * XRange - 2 * MaxRadius) / (Cols - 1);
+		float diff_z = (2 * ZRange - 2 * MaxRadius) / (Cols - 1);
+		float diff_y = (Height - 2 * MaxRadius) / (Cols - 1);
 
-		for (int i = 0; i < Num; i++)
+		for (int i = 0; i < Cols; i++)
 		{
-			for (int j = 0; j < Num; j++)
+			for (int j = 0; j < Cols; j++)
 			{
-				for (int k = 0; k < Num; k++)
+				for (int k = 0; k < Cols; k++)
 				{	
-					int index = i * Num * Num + j * Num + k;
+					int index = i * Cols * Cols + j * Cols + k;
 
 					float place_x = diff_x * i + MaxRadius - XRange;
 					float place_z = diff_z * j + MaxRadius - ZRange;
@@ -98,6 +98,6 @@ public:
 	void UpdateBalls()
 	{
 		// CUDA collision detection
-		CollisionDetection(balls, TimeOnce, XRange, ZRange, Height, GridSize, GridX, GridY, GridZ, NBalls);
+		CollisionDetection(balls, RefreshInterval, XRange, ZRange, Height, GridSize, GridX, GridY, GridZ, NBalls);
 	}
 };

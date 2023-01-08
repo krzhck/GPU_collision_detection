@@ -152,7 +152,7 @@ __device__ void ChangeSpeed(Ball& a, Ball& b)
 参数：球列表，一次的时间，X范围(-X,X),Z范围(-Z,Z),Y范围(0,Y)，球�?�?
 返回：无，但�?更新球列�?
 */
-__global__ void UpdateBallsMove(Ball* balls, float TimeOnce, float XRange, float ZRange, float Height, int N)
+__global__ void UpdateBallsMove(Ball* balls, float RefreshInterval, float XRange, float ZRange, float Height, int N)
 {
 	// 获取全局索引
 	int index = threadIdx.x + blockIdx.x * blockDim.x;
@@ -160,7 +160,7 @@ __global__ void UpdateBallsMove(Ball* balls, float TimeOnce, float XRange, float
 	int stride = blockDim.x * gridDim.x;
 	for (int i = index; i < N; i += stride)
 	{
-		BallMove(balls[i], TimeOnce, XRange, ZRange, Height);
+		BallMove(balls[i], RefreshInterval, XRange, ZRange, Height);
 	}
 
 }
@@ -643,7 +643,7 @@ void HandleCollisionGrid(Ball* balls, float XRange, float ZRange, float Height,
 参数：球列表，一次的时间，X范围(-X,X),Z范围(-Z,Z),Y范围(0,Y)，一�?格子大小，X,Y,Z的格子个数，球个�?
 返回：无，但�?更新球列�?
 */
-void CollisionDetection(Ball* balls, float TimeOnce, float XRange, float ZRange, float Height, 
+void CollisionDetection(Ball* balls, float RefreshInterval, float XRange, float ZRange, float Height, 
 	float GridSize, int GridX, int GridY, int GridZ, int N)
 {
 	//设置，�?�算需要�?�少block和thread
@@ -668,7 +668,7 @@ void CollisionDetection(Ball* balls, float TimeOnce, float XRange, float ZRange,
 	cudaDeviceSynchronize();
 
 	// 执�?�kernel
-	UpdateBallsMove <<< num_blocks, threads_per_block >>> (balls_gpu, TimeOnce, XRange, ZRange, Height, N);
+	UpdateBallsMove <<< num_blocks, threads_per_block >>> (balls_gpu, RefreshInterval, XRange, ZRange, Height, N);
 	// 同�??device 保证结果能�?�确访问
 	cudaDeviceSynchronize();
 

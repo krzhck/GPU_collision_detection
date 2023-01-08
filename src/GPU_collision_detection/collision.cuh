@@ -15,5 +15,5 @@
 #define PADDED_BLOCKS 16
 #define PADDED_GROUPS 256
 
-void CollisionDetection(Ball* balls, float TimeOnce, float XRange, float ZRange, float Height, 
+void CollisionDetection(Ball* balls, float RefreshInterval, float XRange, float ZRange, float Height, 
 	float GridSize, int GridX, int GridY, int GridZ, int N);
