@@ -156,7 +156,7 @@ void OnMouseMove(int x, int y)
 	camera0.MouseMove(x, y);
 }
 
-// keyboard events£¨WASD£©
+// keyboard events WASD
 void OnKeyClick(unsigned char key, int x, int y)
 {
 	int type = -1;
