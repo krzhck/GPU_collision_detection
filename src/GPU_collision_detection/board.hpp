@@ -1,6 +1,7 @@
 #pragma once
-#include<math.h>
-#include"point.hpp"
+#include <math.h>
+#include "point.hpp"
+#include "shader.hpp"
 using namespace std;
 
 class Board
@@ -9,11 +10,8 @@ public:
 	Point PointList[4];
 	Point Normal;
 	//材质，纹理，颜色信息
-	GLfloat Color[3] = { 0, 0, 0 }; //颜色
-	GLfloat Ambient[4] = { 0, 0, 0, 0 }; //环境光
-	GLfloat Diffuse[4] = { 0, 0, 0, 0 }; //漫反射
-	GLfloat Specular[4] = { 0, 0, 0, 0 }; //镜面反射
-	GLfloat Shininess[1] = { 0 }; //镜面指数
+
+	Shader WallShader;
 
 
 	Board(){}
@@ -27,20 +25,9 @@ public:
 	}
 
 	//初始化颜色，纹理，材质信息
-	void InitColor(GLfloat color[], GLfloat ambient[], GLfloat diffuse[], GLfloat specular[], GLfloat shininess)
+	void InitColor(Shader & shader)
 	{
-		for (int i = 0; i < 3; i++)
-		{
-			Color[i] = color[i];
-			Ambient[i] = ambient[i];
-			Diffuse[i] = diffuse[i];
-			Specular[i] = specular[i];
-		}
-		//透明度：1
-		Ambient[3] = 1.0;
-		Diffuse[3] = 1.0;
-		Specular[3] = 1.0;
-		Shininess[0] = shininess;
+		WallShader = shader;
 	}
 
 	//求平面法向量(方向指向外侧）
@@ -74,6 +61,4 @@ public:
 		float norm = sqrt(Normal.x * Normal.x + Normal.y * Normal.y + Normal.z * Normal.z);
 		return dist / norm;
 	}
-
-	
 };

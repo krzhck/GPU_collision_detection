@@ -20,7 +20,7 @@ const int BallNum = 5;
 const float XRange = 10, ZRange = 10, Height = 20, MaxRadius = 1; //场景的X,Y,Z范围（-X,X),(0,H),(-Z,Z)
 
 //光照，相机
-Camera TheCamera(10.0f, 10.0f);
+Camera TheCamera(20.0f, 10.0f);
 Light TheLight;
 
 //物体
@@ -89,19 +89,21 @@ void InitBoards()
 	Point UpD(XRange, Height, ZRange);
 
 	//设置地板和挡板位置
-	Boards[0].InitPlace(DownA, DownB, DownD, DownC);
+	Boards[0].InitPlace(DownA, DownB, DownD, DownC); // bottom
 	Boards[1].InitPlace(DownA, DownB, UpB, UpA);
-	Boards[2].InitPlace(DownC, DownD, UpD, UpC);
-	Boards[3].InitPlace(DownA, DownC, UpC, UpA);
+	Boards[3].InitPlace(DownC, DownD, UpD, UpC);
+	Boards[2].InitPlace(DownA, DownC, UpC, UpA);
 	Boards[4].InitPlace(DownB, DownD, UpD, UpB);
-	Boards[5].InitPlace(UpA, UpB, UpD, UpC);
+	Boards[5].InitPlace(UpA, UpB, UpD, UpC); // top
 
-	GLfloat color_down[3] = { 1.0, 1.0, 1.0 };
-	GLfloat ambient_down[3] = { 0.4, 0.4, 0.4 };
-	GLfloat diffuse_down[3] = { 0.4, 0.4, 0.4 };
-	GLfloat specular_down[3] = { 0.2, 0.2, 0.2 };
-	GLfloat shininess_down = 20;
-	Boards[0].InitColor(color_down, ambient_down, diffuse_down, specular_down, shininess_down);
+	GLfloat color_bottom[4] = { 1.0, 1.0, 1.0 , 1};
+	GLfloat ambient_bottom[4] = { 0.4, 0.4, 0.4 , 1};
+	GLfloat diffuse_bottom[4] = { 0.4, 0.4, 0.4 , 1};
+	GLfloat specular_bottom[4] = { 0.2, 0.2, 0.2 , 1};
+	GLfloat shininess_bottom = 20;
+
+	Shader shader_bottom(color_bottom, ambient_bottom, diffuse_bottom, specular_bottom, shininess_bottom);
+	Boards[0].InitColor(shader_bottom);
 
 	//设置四周挡板材质
 	GLfloat color_border[3] = { 1.0, 1.0, 1.0 };
@@ -109,9 +111,10 @@ void InitBoards()
 	GLfloat diffuse_border[3] = { 0.2, 0.2, 0.2 };
 	GLfloat specular_border[3] = { 0.2, 0.2, 0.2 };
 	GLfloat shininess_border = 40;
+	Shader shader_border(color_border, ambient_border, diffuse_border, specular_border, shininess_border);
 	for (int i = 1; i < 5; i++)
 	{
-		Boards[i].InitColor(color_border, ambient_border, diffuse_border, specular_border, shininess_border);
+		Boards[i].InitColor(shader_border);
 	}
 }
 
@@ -137,16 +140,16 @@ void SetCamera()
 	gluLookAt(camera_place.x, camera_place.y, camera_place.z, camera_center.x, camera_center.y, camera_center.z, 0, 1, 0); //从视点看远点,y轴方向(0,1,0)是上方向  
 }
 
-//绘制边界和地板
+//绘制2边界和地板
 void DrawBoards()
 {
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 3; i++)
 	{
-		glColor3f(Boards[i].Color[0], Boards[i].Color[1], Boards[i].Color[2]);
-		glMaterialfv(GL_FRONT, GL_AMBIENT, Boards[i].Ambient);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, Boards[i].Diffuse);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, Boards[i].Specular);
-		glMaterialfv(GL_FRONT, GL_SHININESS, Boards[i].Shininess);
+		glColor3f(Boards[i].WallShader.Color[0], Boards[i].WallShader.Color[1], Boards[i].WallShader.Color[2]);
+		glMaterialfv(GL_FRONT, GL_AMBIENT, Boards[i].WallShader.Ambient);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, Boards[i].WallShader.Diffuse);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, Boards[i].WallShader.Specular);
+		glMaterialfv(GL_FRONT, GL_SHININESS, Boards[i].WallShader.Shininess);
 
 
 		glBegin(GL_POLYGON);

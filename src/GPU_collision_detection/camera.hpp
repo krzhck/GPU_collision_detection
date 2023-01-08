@@ -14,9 +14,9 @@ public:
 	float H_Vertical; //Y轴高度
 	int MouseX; //上次鼠标的位置
 	int MouseY;
-	const float K_Horizontal = 0.002; //水平移动速度
-	const float K_Vertical = 0.03; //垂直移动速度
-	const float K_Translate = 0.2; //平移速度
+	const float K_Horizontal = 0.01; //水平移动速度
+	const float K_Vertical = 0.05; //垂直移动速度
+	const float K_Translate = 0.5; //平移速度
 public:
 	Camera(float R, float start_height)
 	{
@@ -90,5 +90,4 @@ public:
 		LookCenter.z += change_z;
 		ResetCurrentPlace();
 	}
-	
 };

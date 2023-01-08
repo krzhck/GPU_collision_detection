@@ -24,6 +24,14 @@ public:
 		y = ty;
 		z = tz;
 	}
+
+	Point(const Point& p)
+	{
+		x = p.x;
+		y = p.y;
+		z = p.z;
+	}
+
 	void SetPlace(float tx, float ty, float tz)
 	{
 		x = tx;

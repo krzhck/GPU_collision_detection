@@ -41,12 +41,13 @@ public:
 	void InitBalls()
 	{
 		//小球的纹理，材质，颜色
-		GLfloat color[3] = { 1.0, 0.0, 0.0 };
-		GLfloat ambient[3] = { 0.4, 0.2, 0.2 };
-		GLfloat diffuse[3] = { 1, 0.8, 0.8 };
-		GLfloat specular[3] = { 0.5, 0.3, 0.3 };
-		GLfloat shininess = 10;
-		int complexity = 40;
+		GLfloat color[4] = { 0, 0, 0, 1 };
+		GLfloat ambient[4] = { 0.2, 0.4, 0.7, 1 };
+		GLfloat diffuse[4] = { 0.5, 0.5, 0.5, 1 };
+		GLfloat specular[4] = { 0.5, 0.5, 0.5 , 1};
+		GLfloat shininess = 30;
+
+		Shader shader(color, ambient, diffuse, specular, shininess);
 
 		float diff_x = (2 * XRange - 2 * MaxRadius) / (Num - 1);
 		float diff_z = (2 * ZRange - 2 * MaxRadius) / (Num - 1);
@@ -58,18 +59,21 @@ public:
 			{
 				for (int k = 0; k < Num; k++)
 				{	
-					
+					int index = i * Num * Num + j * Num + k;
+
 					float place_x = diff_x * i + MaxRadius - XRange;
 					float place_z = diff_z * j + MaxRadius - ZRange;
 					float place_y = diff_y * k + MaxRadius;
+					Point pos(place_x, place_y, place_z);
 					
-					int index = i * Num * Num + j * Num + k;
-					balls[index].InitColor(color, ambient, diffuse, specular, shininess, complexity);
 					float speed_x = ((rand() % 201) / 100.0f - 1.0f) * 10;
 					float speed_y = ((rand() % 201) / 100.0f - 1.0f) * 10;
 					float speed_z = ((rand() % 201) / 100.0f - 1.0f) * 10;
+					Point speed(speed_x, speed_y, speed_z);
+
 					float radius = ((rand() % 51) / 100.0f + 0.5f) * MaxRadius;
-					balls[index].InitPlace(place_x, place_y, place_z, radius, speed_x, speed_y, speed_z);
+					
+					balls[index].Init(pos, speed, radius, shader);
 				}
 			}
 
