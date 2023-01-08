@@ -172,8 +172,7 @@ __global__ void UpdateBallsMove(Ball* balls, float TimeOnce, float XRange, float
 参数：空的cell，phantom；球列表和个数，还有各种格子信息
 返回：更新cells，objects数组和cell_num
 */
-__global__ void InitCellKernel(uint32_t *cells, uint32_t *objects, Ball* balls, int N,
-	float XRange, float ZRange, float Height, float GridSize, int GridX, int GridY, int GridZ) 
+__global__ void InitCellKernel(uint32_t *cells, uint32_t *objects, Ball* balls, int N, float XRange, float ZRange, float Height, float GridSize, int GridX, int GridY, int GridZ) 
 {
 	unsigned int count = 0;
 
@@ -300,19 +299,6 @@ __global__ void InitCellKernel(uint32_t *cells, uint32_t *objects, Ball* balls, 
 
 }
 
-/*
-描述：初始化cells， objects数组的主函数
-参数：空的cell，phantom；球列表和个数，还有各种格子信息，线程信息
-返回：更新cells，objects数组和cell_num
- */
-void InitCells(uint32_t *cells, uint32_t *objects, Ball* balls, int N,
-	 float XRange, float ZRange, float Height, float GridSize, int GridX, int GridY, int GridZ, 
-	 unsigned int num_blocks, unsigned int threads_per_block) {
-	 InitCellKernel << <num_blocks, threads_per_block,
-		 threads_per_block * sizeof(unsigned int) >> > (
-			 cells, objects, balls, N, XRange, ZRange, Height, GridSize, GridX, GridY, GridZ);
- }
-
 
 /*
 描述：计算前i和的算法
@@ -409,7 +395,6 @@ __global__ void RearrangeCell(uint32_t *cells, uint32_t *objects, uint32_t *cell
 	 uint32_t *radix_sums, int N, int shift)
  {
 	 int index = threadIdx.x + blockIdx.x * blockDim.x;
-	 int stride = blockDim.x * gridDim.x;
 	 int num_radices = 1 << RADIX_LENGTH;
 
 	 if (index != 0) return;
@@ -431,7 +416,6 @@ __global__ void RearrangeCell(uint32_t *cells, uint32_t *objects, uint32_t *cell
 __global__ void GetCellIndex(uint32_t *cells, int N, uint32_t* indices, uint32_t* num_indices)
 {
 	int index = threadIdx.x + blockIdx.x * blockDim.x;
-	int stride = blockDim.x * gridDim.x;
 	//只能串行
 	if (index != 0) return;
 	num_indices[0] = 0;
@@ -474,7 +458,7 @@ void SortCells(uint32_t *cells, uint32_t *objects, uint32_t *cells_temp, uint32_
 		GetRadixSum <<< num_blocks, threads_per_block >>> (cells, radix_sums, N, i);
 
 		//用前缀和重新分配
-		RearrangeCell << < num_blocks, threads_per_block >> > (cells, objects, cells_temp, objects_temp,
+		RearrangeCell <<< num_blocks, threads_per_block >>> (cells, objects, cells_temp, objects_temp,
 			radix_sums, N, i);
 		
 		//交换原始和temp
@@ -485,7 +469,7 @@ void SortCells(uint32_t *cells, uint32_t *objects, uint32_t *cells_temp, uint32_
 		objects = objects_temp;
 		objects_temp = objects_swap;
 	}
-	GetCellIndex << < num_blocks, threads_per_block >> > (cells, N, indices, num_indices);
+	GetCellIndex <<< num_blocks, threads_per_block >>> (cells, N, indices, num_indices);
 }
 
 /*
@@ -590,7 +574,7 @@ void HandleCollision(uint32_t *cells, uint32_t *objects, Ball* balls, int num_ba
 {
 	unsigned int threads_total = num_blocks * threads_per_block;
 	unsigned int group_per_thread = num_indices / threads_total + 1;
-	HandleCollisionCuda << <num_blocks, threads_per_block >> > (cells, objects, balls, num_balls, num_cells,
+	HandleCollisionCuda <<< num_blocks, threads_per_block >>> (cells, objects, balls, num_balls, num_cells,
 		indices, num_indices, group_per_thread,
 		XRange, ZRange, Height, GridSize, GridX, GridY, GridZ);
 }
@@ -629,10 +613,7 @@ void HandleCollisionGrid(Ball* balls, float XRange, float ZRange, float Height,
 
 	
 	//初始化cell和object
-	InitCells(cells_gpu, objects_gpu, balls, N,
-		XRange, ZRange, Height, GridSize, GridX, GridY, GridZ,
-		num_blocks, threads_per_block);
-
+	InitCellKernel <<< num_blocks, threads_per_block, threads_per_block * sizeof(unsigned int) >>> (cells_gpu, objects_gpu, balls, N, XRange, ZRange, Height, GridSize, GridX, GridY, GridZ);
 
 	//基数排序
 	SortCells(cells_gpu, objects_gpu, cells_gpu_temp, objects_gpu_temp, radix_sums_gpu, 
@@ -688,7 +669,7 @@ void UpdateBallsGridGPU(Ball* balls, float TimeOnce, float XRange, float ZRange,
 	cudaDeviceSynchronize();
 
 	// 执行kernel
-	UpdateBallsMove << < num_blocks, threads_per_block>> > (balls_gpu, TimeOnce, XRange, ZRange, Height, N);
+	UpdateBallsMove <<< num_blocks, threads_per_block >>> (balls_gpu, TimeOnce, XRange, ZRange, Height, N);
 	// 同步device 保证结果能正确访问
 	cudaDeviceSynchronize();
 

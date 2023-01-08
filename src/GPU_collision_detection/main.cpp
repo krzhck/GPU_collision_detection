@@ -20,7 +20,7 @@ const int BallNum = 5;
 const float XRange = 10, ZRange = 10, Height = 20, MaxRadius = 1; //场景的X,Y,Z范围（-X,X),(0,H),(-Z,Z)
 
 //光照，相机
-Camera TheCamera;
+Camera TheCamera(10.0f, 10.0f);
 Light TheLight;
 
 //物体
@@ -82,13 +82,6 @@ void InitLight()
 	glEnable(GL_DEPTH_TEST);
 }
 
-//初始化相机
-void InitCamera()
-{
-	//设置初始相机位置
-	TheCamera.Init(10.0f, 10.0f);
-}
-
 //初始化边界和地板
 void InitBoards()
 {
@@ -137,7 +130,6 @@ void InitScene()
 {
 
 	InitLight();
-	InitCamera();
 	InitBoards();
 	Balls.Init(XRange, Height, ZRange, BallNum, MaxRadius, TimeOnce);
 	Balls.InitBalls();

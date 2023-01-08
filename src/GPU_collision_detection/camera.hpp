@@ -18,9 +18,7 @@ public:
 	const float K_Vertical = 0.03; //垂直移动速度
 	const float K_Translate = 0.2; //平移速度
 public:
-	Camera(){}
-
-	void Init(float R, float start_height)
+	Camera(float R, float start_height)
 	{
 		R_Horizontal = R;
 		Arc_Horizontal = 0;
@@ -30,7 +28,6 @@ public:
 		MouseY = -1;
 		LookCenter.SetPlace(0, 0, 0);
 	}
-
 
 
 	void ResetCurrentPlace()

@@ -3,7 +3,6 @@
 #include<GL/glut.h>
 #include<vector>
 #include"point.hpp"
-#include"board.hpp"
 using namespace std;
 
 #pragma once
@@ -18,7 +17,7 @@ public:
 	float Weight;
 
 	//材质，纹理，颜色信息
-	GLfloat Color[3] = { 0, 0, 0 }; //颜色
+	GLfloat Color[3] = { 1, 0, 0 }; //颜色
 	GLfloat Ambient[4] = { 0, 0, 0, 0 }; //环境光
 	GLfloat Diffuse[4] = { 0, 0, 0, 0 }; //漫反射
 	GLfloat Specular[4] = { 0, 0, 0, 0 }; //镜面反射
