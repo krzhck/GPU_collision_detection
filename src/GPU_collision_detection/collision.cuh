@@ -15,7 +15,5 @@
 #define PADDED_BLOCKS 16
 #define PADDED_GROUPS 256
 
-void UpdateBallsNaiveGPU(Ball* balls, float TimeOnce, float XRange, float ZRange, float Height, int N);
-
 void UpdateBallsGridGPU(Ball* balls, float TimeOnce, float XRange, float ZRange, float Height, 
 	float GridSize, int GridX, int GridY, int GridZ, int N);

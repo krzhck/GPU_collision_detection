@@ -97,49 +97,6 @@ public:
 		}
 	}
 
-	/*
-		描述：判断两个球是否相撞
-		参数：球a，球b
-		返回：是1，否0
-	*/
-	bool JudgeCollision(Ball& a, Ball& b)
-	{
-		float dist = (a.CurrentPlace - b.CurrentPlace).Dist();
-		if (dist < a.Radius + b.Radius)
-		{
-			return 1;
-		}
-		else
-		{
-			return 0;
-		}
-	}
-
-	/*
-		描述：两球相撞后更新速度
-		参数：球a，球b
-		返回：无
-	*/
-	void ChangeSpeed(Ball& a, Ball& b)
-	{
-		//径向速度按照质量做变换，法向速度不变
-		Point diff = b.CurrentPlace - a.CurrentPlace;
-		float dist = diff.Dist();
-		
-		//求径向，法向速度
-		Point speed_collide_a = diff * (a.CurrentSpeed * diff / dist / dist);
-		Point speed_collide_b = diff * (b.CurrentSpeed * diff / dist / dist);
-		Point unchanged_a = a.CurrentSpeed - speed_collide_a;
-		Point unchanged_b = b.CurrentSpeed - speed_collide_b;
-		
-		//假设b不动，a撞b，更新两者径向速度
-		Point speed_collide_new_a = (speed_collide_a * (a.Weight - b.Weight) + speed_collide_b * (2 * b.Weight)) / (a.Weight + b.Weight);
-		Point speed_collide_new_b = (speed_collide_a * (2 * a.Weight) + speed_collide_b * (b.Weight - a.Weight)) / (a.Weight + b.Weight);
-		Point speed_new_a = speed_collide_new_a + unchanged_a;
-		Point speed_new_b = speed_collide_new_b + unchanged_b;
-		a.CurrentSpeed = speed_new_a;
-		b.CurrentSpeed = speed_new_b;
-	}
 
 	//更新球的运动--主函数
 	void UpdateBalls()

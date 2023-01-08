@@ -5,7 +5,7 @@ using namespace std;
 
 #define PI 3.14159265
 
-//3DµãµÄ»ùÀà
+// 3D坐标类
 class Point
 {
 public:
