@@ -24,11 +24,6 @@ public:
 		GetNorm();
 	}
 
-	//初�?�化颜色，纹理，材质信息
-	void InitColor(Shader & shader)
-	{
-		WallShader = shader;
-	}
 
 	//求平面法向量(方向指向外侧�?
 	void GetNorm()

@@ -36,22 +36,7 @@ void InitWindow()
 	glutInitWindowSize(window_width, window_height);
 	glutInitWindowPosition(window_x, window_y);
 	glutCreateWindow(window_name);
-
-	const GLubyte* OpenGLVersion = glGetString(GL_VERSION);
-	const GLubyte* gluVersion = gluGetString(GLU_VERSION);
-	printf("OpenGL实现的版本号：%s\n", OpenGLVersion);
-	printf("OGLU工具库版本：%s\n", gluVersion);
-	int dev = 0;
-	cudaDeviceProp devProp;
-	if (cudaGetDeviceProperties(&devProp, dev) == cudaSuccess)
-	{
-		std::cout << "使用GPU device " << dev << ": " << devProp.name << std::endl;
-		std::cout << "SM的数量：" << devProp.multiProcessorCount << std::endl;
-		std::cout << "每个线程块的共享内存大小：" << devProp.sharedMemPerBlock / 1024.0 << " KB" << std::endl;
-		std::cout << "每个线程块的最大线程数：" << devProp.maxThreadsPerBlock << std::endl;
-		std::cout << "每个EM的最大线程数：" << devProp.maxThreadsPerMultiProcessor << std::endl;
-		std::cout << "每个EM的最大线程束数：" << devProp.maxThreadsPerMultiProcessor / 32 << std::endl;
-	}
+	printf("GPU collision detection running...");
 }
 
 //初始化光照
@@ -96,32 +81,31 @@ void InitWalls()
 	walls[4].InitPos(bottomB, bottomD, topD, topB);
 	walls[5].InitPos(topA, topB, topD, topC); // top
 
-	GLfloat color_bottom[4] = { 1.0, 1.0, 1.0 , 1};
-	GLfloat ambient_bottom[4] = { 0.4, 0.4, 0.4 , 1};
-	GLfloat diffuse_bottom[4] = { 0.4, 0.4, 0.4 , 1};
-	GLfloat specular_bottom[4] = { 0.2, 0.2, 0.2 , 1};
+	GLfloat color_bottom[4] = { 1.0, 1.0, 1.0 , 1 };
+	GLfloat ambient_bottom[4] = { 0.3, 0.3, 0.3 , 1 };
+	GLfloat diffuse_bottom[4] = { 0.4, 0.4, 0.4 , 1 };
+	GLfloat specular_bottom[4] = { 0.2, 0.2, 0.2 , 1 };
 	GLfloat shininess_bottom = 20;
 
 	Shader shader_bottom(color_bottom, ambient_bottom, diffuse_bottom, specular_bottom, shininess_bottom);
-	walls[0].InitColor(shader_bottom);
+	walls[0].WallShader = shader_bottom;
 
 	//设置四周挡板材质
-	GLfloat color_border[3] = { 1.0, 1.0, 1.0 };
-	GLfloat ambient_border[3] = { 0.2, 0.2, 0.2 };
-	GLfloat diffuse_border[3] = { 0.2, 0.2, 0.2 };
-	GLfloat specular_border[3] = { 0.2, 0.2, 0.2 };
-	GLfloat shininess_border = 40;
+	GLfloat color_border[4] = { 1.0, 1.0, 1.0, 1};
+	GLfloat ambient_border[4] = { 0.5, 0.5, 0.5, 1 };
+	GLfloat diffuse_border[4] = { 0.2, 0.2, 0.2, 1 };
+	GLfloat specular_border[4] = { 0.2, 0.2, 0.2, 1 };
+	GLfloat shininess_border = 20;
 	Shader shader_border(color_border, ambient_border, diffuse_border, specular_border, shininess_border);
 	for (int i = 1; i < 5; i++)
 	{
-		walls[i].InitColor(shader_border);
+		walls[i].WallShader = shader_border;
 	}
 }
 
 //初始化的主函数
 void InitScene()
 {
-
 	InitLight();
 	InitWalls();
 	balls.InitBalls();
@@ -160,7 +144,6 @@ void RenderWalls()
 
 }
 
-
 //绘制的主函数
 void RenderScene()
 {
@@ -176,7 +159,7 @@ void RenderScene()
 void OnTimer(int value)
 {
 	glutPostRedisplay();//标记当前窗口需要重新绘制，调用myDisplay()
-	glutTimerFunc(20, OnTimer, 1);
+	glutTimerFunc(33, OnTimer, 1);
 }
 
 
@@ -242,7 +225,6 @@ void OnSpecialKeyClick(GLint key, GLint x, GLint y)
 	camera0.KeyboardMove(type);
 }
 
-
 //reshape函数
 void reshape(int w, int h)
 {
@@ -260,7 +242,7 @@ int main(int argc, char** argv)
 	InitScene();              //初始化场景
 	glutReshapeFunc(reshape); //绑定reshape函数
 	glutDisplayFunc(RenderScene); //绑定显示函数
-	glutTimerFunc(20, OnTimer, 1);  //启动计时器
+	glutTimerFunc(33, OnTimer, 1);  //启动计时器
 	glutMouseFunc(OnMouseClick); //绑定鼠标点击函数
 	glutMotionFunc(OnMouseMove); //绑定鼠标移动函数
 	glutKeyboardFunc(OnKeyClick);//绑定键盘点击函数
