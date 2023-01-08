@@ -57,13 +57,6 @@ void InitWindow()
 //初始化光照
 void InitLight()
 {
-	GLfloat background_color[3] = { 0.0, 0.0, 0.0 };
-	GLfloat ambient[3] = { 1, 1, 1 };
-	GLfloat diffuse[3] = { 1, 1, 1 };
-	GLfloat specular[3] = { 1, 1, 1 };
-	GLfloat position[3] = { 0.0f, 10.0f, 0.0f };
-	TheLight.Init(background_color, ambient, diffuse, specular, position);
-
 	//设置着色模式
 	glShadeModel(GL_SMOOTH);
 	//设置初始背景色，清除颜色缓存和深度缓存
