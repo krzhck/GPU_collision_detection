@@ -19,31 +19,51 @@
 
 ## 2 项目结构
 
-| 文件          | 描述 |
-| ------------- | ---- |
-| ball.hpp      |      |
-| balllist.hpp  |      |
-| board.hpp     |      |
-| camera.hpp    |      |
-| collision.cu  |      |
-| collision.cuh |      |
-| light.hpp     |      |
-| main.cpp      |      |
-| point.hpp     |      |
+| 文件          | 描述                                   |
+| ------------- | -------------------------------------- |
+| ball.hpp      | 定义了表示单个小球的类 `Ball`          |
+| ballset.hpp   | 定义了表示所有小球的集合的类 `BallSet` |
+| wall.hpp      | 定义了表示墙壁的类 `Wall`              |
+| camera.hpp    | 定义了表示相机的类 `Camera`            |
+| collision.cu  | GPU 上的碰撞检测算法实现               |
+| collision.cuh | CUDA 头文件                            |
+| light.hpp     | 定义了表示光线的类 `Light`             |
+| main.cpp      | 入口点                                 |
+| coord.hpp     | 定义了表示 3D 坐标的类 `Coord`         |
 
-
+<div style="page-break-after: always;"></div> 
 
 ## 3 运行流程
+
+main.cpp 中首先会初始化窗口，然后初始化场景中的素材，包括光照、相机、小球、墙壁等，并进行渲染，绑定键盘鼠标时间，之后进入主循环：
+
+- 检测和处理窗口事件
+- 更新所有小球运动状态（逻辑位于 ballset.hpp 和 collision.cuh）
+- 渲染场景
+
+关闭窗口后程序退出。
 
 
 
 ## 4 演示方法
 
+运行目录 ../bin 下的 GPU_collision_detection.exe 文件，键盘 WASD 可水平移动观测点，点击鼠标左/右键拖动改变观测视角。
 
 
 
+## 5 实验结果
 
-## 5 参考内容
+演示效果见 ./video 目录下的 demo.mp4 文件。
+
+实现了小球与小球、小球与墙壁的碰撞检测，运行截图如下
+
+<img src="asset/4411673190229_.pic.jpg" alt="4411673190229_.pic" style="zoom:25%;" />
+
+因时间原因未能完成物体的碰撞检测
+
+<div style="page-break-after: always;"></div> 
+
+## 6 参考内容
 
 - CUDA 环境
   - https://zhuanlan.zhihu.com/p/488518526
