@@ -186,7 +186,7 @@ void OnMouseClick(int button, int state, int x, int y)
 {
 	if (state == GLUT_DOWN)
 	{
-		camera0.Mousebottom(x, y);
+		camera0.MouseDown(x, y);
 	}
 }
 
