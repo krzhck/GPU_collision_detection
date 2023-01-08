@@ -2,12 +2,12 @@
 #include<iostream>
 #include<math.h>
 #include<windows.h>
-#include "point.hpp"
+#include "coord.hpp"
 #include "ball.hpp"
 #include "light.hpp"
 #include "camera.hpp"
-#include "board.hpp"
-#include "balllist.hpp"
+#include "wall.hpp"
+#include "ballset.hpp"
 #include "collision.cuh"
 using namespace std;
 

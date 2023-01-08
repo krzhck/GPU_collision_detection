@@ -3,7 +3,7 @@
 #include<GL/glut.h>
 #include<vector>
 #include<time.h>
-#include"point.hpp"
+#include"coord.hpp"
 #include"ball.hpp"
 #include"collision.cuh"
 using namespace std;

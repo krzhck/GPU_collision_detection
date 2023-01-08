@@ -86,12 +86,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ball.hpp" />
-    <ClInclude Include="balllist.hpp" />
-    <ClInclude Include="board.hpp" />
+    <ClInclude Include="ballset.hpp" />
+    <ClInclude Include="wall.hpp" />
     <ClInclude Include="camera.hpp" />
     <ClInclude Include="collision.cuh" />
     <ClInclude Include="light.hpp" />
-    <ClInclude Include="point.hpp" />
+    <ClInclude Include="coord.hpp" />
     <ClInclude Include="shader.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

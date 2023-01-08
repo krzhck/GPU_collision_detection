@@ -2,7 +2,7 @@
 #include<math.h>
 #include<GL/glut.h>
 #include<vector>
-#include"point.hpp"
+#include"coord.hpp"
 #include "shader.hpp"
 using namespace std;
 

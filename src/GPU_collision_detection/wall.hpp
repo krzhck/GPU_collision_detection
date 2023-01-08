@@ -1,6 +1,6 @@
 #pragma once
 #include <math.h>
-#include "point.hpp"
+#include "coord.hpp"
 #include "shader.hpp"
 using namespace std;
 
